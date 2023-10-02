@@ -133,7 +133,7 @@ index.html.registration.addEventListener("click", () => {
 
 index.html.generate.addEventListener("click", () => {
     if (index.input == undefined || index.input == "") {
-        index.html.generate_feedback.innerHTML = "You have not selected a gallery soruce!";
+        index.html.generate_feedback.innerHTML = "You have not selected a gallery source!";
         return;
     }
     if (index.output == undefined || index.output == "") {
