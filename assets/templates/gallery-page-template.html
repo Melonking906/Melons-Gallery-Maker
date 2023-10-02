@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{ALBUM_TITLE}</title>
+        <meta itemprop="name" content="{ALBUM_TITLE}" />
+        <meta itemprop="description" content="{ALBUM_INFO}" />
+
+        <link href="../gallery.css{ANTI_CACHE}" rel="stylesheet" type="text/css" media="all" />
+        {CUSTOM_CSS}
+    </head>
+    <body>
+        <header>
+            <h1><img src="https://pixelsea.neocities.org/icons/camera-014.gif" alt="Camera Icon" /> {ALBUM_TITLE}</h1>
+            <p>{ALBUM_INFO}</p>
+            <a href="../">&#8592; Back to the index!</a>
+        </header>
+        <section>
+            <nav class="page-links">{PAGELINKS}</nav>
+            <section id="photos">{PHOTOS}</section>
+            <nav class="page-links">{PAGELINKS}</nav>
+        </section>
+        <footer>Made with <a href="https://forum.melonland.net/index.php?topic=2088">Melon's Gallery {MAKER_VERSION}</a> - Updated: {LAST_UPDATE}</footer>
+    </body>
+</html>

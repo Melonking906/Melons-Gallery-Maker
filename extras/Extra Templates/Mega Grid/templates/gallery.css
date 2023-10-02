@@ -1,0 +1,114 @@
+/* Melon's Gallery Maker! - Mega Grid v0.1 */
+
+body {
+    font-family: monospace;
+    background-color: #f6f4f1;
+    font-size: 0.9rem;
+    padding: 5px;
+}
+
+a,
+a:visited {
+    color: #e73400;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+h1,
+h2 {
+    font-size: 0.8rem;
+}
+
+nav {
+    clear: both;
+}
+
+nav ul,
+nav li {
+    padding: 0px 15px;
+}
+
+footer {
+    clear: both;
+    margin-top: 20px;
+    font-size: 0.7em;
+}
+
+/* Gallery Pages */
+
+#photos {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#photos img {
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
+    /* Enable this for pixel art!! */
+    /* image-rendering: pixelated; */
+}
+
+#photos img:hover {
+    opacity: 0.3;
+}
+
+#photos span {
+    display: block;
+    font-size: 0.5em;
+    word-break: break-all;
+    max-width: 45px;
+}
+
+.page-links ul {
+    padding: 5px 5px;
+    margin: 0px;
+    display: inline-block;
+}
+.page-links li {
+    list-style: none;
+    display: inline;
+    margin: 0px 1px;
+    padding: 0px;
+}
+
+/* Styling for JavaScript viewer (if enabled) */
+
+#js-viewer {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(231, 52, 0, 0.627);
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#js-viewer img {
+    max-width: 95%;
+    max-height: 80%;
+    height: auto;
+    width: auto;
+}
+
+#js-viewer span {
+    margin-top: 10px;
+}
+
+#js-viewer span button {
+    border-radius: 0px;
+    border: 2px outset #cecece;
+    background-color: #e2e2e2;
+    cursor: pointer;
+}
+
+#js-viewer span button:hover {
+    border: 2px inset #cecece;
+    background-color: #b8b8b8;
+}

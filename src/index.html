@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+        <title>Melon's Gallery Maker!</title>
+        <link rel="stylesheet" type="text/css" href="styles/fonts/basiic/basiic.css" />
+        <link rel="stylesheet" type="text/css" href="styles/ui.css" />
+    </head>
+    <body>
+        <header>
+            <h1><img src="images/melons-gallery.gif" alt="Melon's Gallery Generator!" draggable="false" /></h1>
+            <span><h2><span id="version"></span> - <span id="registration">unregistered</span></h2></span>
+            <p>Welcome HUMAN, this shareware will convert your photo albums/collections into HTML web albums!</p>
+        </header>
+        <hr />
+        <br />
+        <div id="wrapper">
+            <div id="left">
+                <h2>Source Folder:</h2>
+                <button id="input" type="button">Pick your Gallery Source!</button><br />
+                <b id="input-feedback">No source selected...</b>
+                <br />
+                <span class="inputRow" id="input-feedback-new"><br /><label>This is a new gallery!</label><button id="input-feedback-new-button" type="button">Create template files?</button></span>
+                <span class="inputRow" id="input-feedback-open"><br /><label>Gallery found!</label><button id="input-feedback-open-button" type="button">Open the templates folder?</button></span>
+                <br /><br />
+                <h2>Gallery Settings:</h2>
+                <span class="inputRow"><label>Gallery Title:</label> <input type="text" id="title" value="My Gallery!" maxlength="128" /></span>
+                <span>Gallery About:</span> <br />
+                <span class="inputRow"><textarea id="info">My very cool gallery of coolness!!</textarea></span><br />
+                <span class="inputRow inputBG"><label>Include JavaScript:</label> <input type="checkbox" id="use_javascript" checked /></span> <br />
+                <h2>Image Settings:</h2>
+                <span class="inputRow"><label>Max Image Width:</label> <input type="number" id="image_size" min="16" max="3840" value="1920" maxlength="4" /><b>px</b></span> <br />
+                <label for="image_compression">Image Compression:</label><br />
+                <div class="inputRow">
+                    <label for="image_compression">Mega Squish!</label>
+                    <input id="image_compression" type="range" min="1" max="100" step="5" value="85" />
+                    <label for="image_compression">Big Files!</label>
+                </div>
+                <br />
+                <h2>Album Settings:</h2>
+                <span class="inputRow"><label>Thumbnail Size:</label> <input type="number" id="thumbnail_size" min="16" max="512" value="256" maxlength="4" /><b>px</b></span>
+                <br />
+                <span class="inputRow"><label>Photos Per Page:</label> <input type="number" id="images_per_page" min="1" max="250" value="100" maxlength="3" /></span>
+                <br />
+                <span class="inputRow inputBG"><label>Show File Names:</label> <input type="checkbox" id="show_filenames" checked /></span> <br />
+                <h2>Output Folder:</h2>
+                <button id="output" type="button">Pick a folder to save to!</button><br />
+                <b id="output-feedback">No output folder selected...</b>
+                <br /><br />
+                <span class="inputRow inputBG"><label>Enable HTML Pro Compression:</label> <input type="checkbox" id="use_minify" checked /></span> <br />
+                <button id="generate" type="button">Make my gallery u program!</button> <br />
+                <b id="generate-feedback">Click make to make/update your gallery!</b>
+                <hr />
+                <span class="inputRow"><button id="open-output" type="button">Open the save folder!</button> <button id="open-neocities" type="button">Open Neocities Uploader!</button></span>
+            </div>
+            <div id="right">
+                <h3>Users Guide:</h3>
+                <p>To your left you will notice the SOURCE picker! Your source folder can be any folder that contains one or more sub-folders of images. Each sub-folder will be converted into a photo album in your gallery!</p>
+                <img src="images/sample.png" alt="Folder Example" />
+                <p>When you pick a source, this program will create some template files 4u! You can modify the templates to change how your gallery will look!</p>
+                <p>Source Tips and Notes:
+                    <ul>
+                        <li>Your source images will never be modified!</li>
+                        <li>Albums are named after their source folders!</li>
+                        <li>Empty albums wont be included in the gallery!</li>
+                        <li>You can included a .css file in an albums source folder to give the album a unique style!</li>
+                        <li>You can include a .txt file in an albums source folder to give the album a unique description!</li>
+                        <li>If you mess up a template, just delete it and the program will offer to remake it!</li>
+                    </ul>
+                </p>
+                <p>Your OUTPUT folder is where your new HTML gallery will be exported to! Every time you click the MAKE button; your gallery will be regenerated!</p>
+                <p>Output Tips and Notes:
+                    <ul>
+                        <li>You can re-make as often as you like with new templates, images, albums and settings!</li>
+                        <li>GIF images wont be resized (it breaks animations) !!!</li>
+                        <li>Images will only added/regenerated when necessary!</li>
+                        <li>HTML and CSS files are always regenerated!</li>
+                        <li>Deleted source images will be excluded from the HTML, but old export files wont be deleted!</li>
+                    </ul>
+                </p>
+                <p>When you are ready you can upload your new gallery to your homepage. If you use Neocities, you can use the Neocities Uploader to automatically upload your gallery to your neocities site!</p>
+                <p>Try it out :^] I hope you enjoy making galleries and sharing them!</p>
+            </div>
+        </div>
+
+        <audio id="click-audio">
+            <source src="audio/click.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="interact-audio">
+            <source src="audio/drip.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="loading-audio" loop>
+            <source src="audio/happy-hippos.mod.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="success-audio">
+            <source src="audio/success.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="error-audio">
+            <source src="audio/error.mp3" type="audio/mpeg" />
+        </audio>
+        <script src="audio-extra.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>

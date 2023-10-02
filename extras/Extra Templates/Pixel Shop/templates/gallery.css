@@ -1,0 +1,152 @@
+/* Melon's Gallery Maker! - Pixel Shop v0.1 */
+
+@import url("https://melonking.net/styles/fonts/BPdots/BPdotsDiamond.css");
+@import url("https://melonking.net/styles/fonts/BPdots/BPdotsDiamondBold.css");
+
+body {
+    font-family: "BPdotsDiamond", monospace;
+    color: #730544;
+    font-size: 0.9em;
+    background-color: #ffffff;
+    font-weight: 700;
+}
+
+a,
+a:visited {
+    color: #24a8ee;
+    text-shadow: 1px 1px rgba(36, 168, 238, 0.166);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    font-weight: normal;
+}
+
+header,
+section,
+footer {
+    margin: 15px;
+}
+
+header,
+body > section {
+    padding-bottom: 5px;
+}
+
+h1,
+h1 a,
+h1 a:visited {
+    color: rgba(0, 0, 0, 1);
+    text-decoration: none;
+    text-align: center;
+    font-size: 3rem;
+    margin: 20px;
+    text-shadow: 4px 4px rgba(255, 205, 245, 0.674);
+}
+
+h2 {
+    border-top: 3px double #ff0097;
+    background-image: linear-gradient(180deg, rgba(192, 241, 255, 0.387) 5%, rgba(255, 255, 255, 0) 77%);
+}
+
+nav {
+    margin: 10px;
+    clear: both;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+footer {
+    text-align: center;
+    padding-top: 30px;
+    clear: both;
+    font-size: 0.7em;
+}
+
+#wrapper {
+    margin: 40px auto;
+    max-width: 1200px;
+}
+
+/* Gallery Pages */
+
+#photos a {
+    margin: 5px;
+    display: inline-block;
+}
+
+#photos img {
+    /* Enable this for pixel art!! */
+    image-rendering: pixelated;
+    filter: drop-shadow(0px 0px 30px rgba(44, 241, 199, 0.258));
+}
+
+#photos img:hover {
+}
+
+#photos span {
+    text-align: center;
+    display: block;
+}
+
+.page-links {
+    text-align: center;
+}
+.page-links ul {
+    padding: 0px 5px;
+    display: inline-block;
+}
+.page-links li {
+    list-style: none;
+    display: inline;
+    margin: 0px 5px;
+}
+.page-links li:after {
+    content: ",";
+}
+
+/* Styling for JavaScript viewer (if enabled) */
+
+#js-viewer {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(247, 247, 247, 0.343);
+    filter: drop-shadow(0px 0px 50px rgba(44, 241, 199, 1));
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#js-viewer img {
+    max-width: 95%;
+    max-height: 80%;
+    height: auto;
+    width: auto;
+    border-radius: 10px;
+    border: 3px double #ff0097;
+}
+
+#js-viewer span {
+    margin-top: 10px;
+}
+
+#js-viewer span button {
+    font-size: 1.5em;
+    border-radius: 0px;
+    color: #ffffff;
+    border: 2px double #ffffff;
+    background-color: #1f0016;
+    cursor: pointer;
+}
+
+#js-viewer span button:hover {
+    border: 2px double #ffb9ea;
+    background-color: #300022;
+}

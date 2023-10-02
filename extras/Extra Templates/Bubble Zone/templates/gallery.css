@@ -1,0 +1,199 @@
+/* Melon's Gallery Maker! - Bubble Zone! v0.1 */
+
+body {
+    font-family: "Tahoma", san-serif;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    background-color: #00357b;
+    color: rgb(160, 233, 255);
+    text-shadow: 2px 2px rgba(20, 87, 107, 1);
+    font-size: 1em;
+    padding: 5% 10%;
+    background-image: url("https://textures.neocities.org/textures/water/ciq60003.jpg");
+    background-size: 100%;
+    text-align: center;
+}
+
+a,
+a:visited {
+    color: #ffe900;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+header,
+body > section,
+footer {
+    padding: 5px;
+}
+
+nav {
+    margin: 10px;
+    clear: both;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+header {
+    margin-bottom: 40px;
+}
+
+header img {
+    width: 100px;
+    image-rendering: pixelated;
+}
+
+h1,
+h2 {
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    padding: 5px;
+}
+
+p {
+    background-image: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+}
+
+footer {
+    clear: both;
+    font-size: 0.7em;
+    padding-top: 30px;
+}
+
+#shade {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: -10;
+    background-image: url("https://textures.neocities.org/textures/water/ciq60572.jpg");
+    background-size: 100%;
+    background-color: black;
+    opacity: 0.5;
+}
+
+/* Gallery Pages */
+
+#photos a {
+    margin: 10px;
+    display: inline-block;
+}
+
+#photos img {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 200px;
+    height: 200px;
+    filter: drop-shadow(0px 0px 30px rgba(159, 240, 223, 0.735));
+    border: 3px double #ff0097;
+    /* Enable this for pixel art!! */
+    /* image-rendering: pixelated; */
+}
+
+#photos a:nth-child(5n) {
+    margin: 10px;
+    float: left;
+}
+#photos a:nth-child(5n) img {
+    width: 250px;
+    height: 250px;
+}
+
+#photos a:nth-child(2n) {
+    margin: 30px;
+    float: right;
+}
+#photos a:nth-child(2n) img {
+    width: 170px;
+    height: 170px;
+}
+
+#photos a:nth-child(3n) {
+    margin: 80px;
+    float: left;
+}
+#photos a:nth-child(3n) img {
+    width: 300px;
+    height: 300px;
+}
+
+#photos a:nth-child(7n) {
+    margin: 200px;
+    float: right;
+}
+#photos a:nth-child(7n) img {
+    width: 240px;
+    height: 240px;
+}
+
+#photos img:hover {
+    border-color: #ffda00;
+}
+
+#photos span {
+    text-align: center;
+    display: block;
+}
+
+.page-links {
+    text-align: center;
+}
+
+.page-links ul {
+    padding: 0px 5px;
+    margin: 10px 0px;
+    display: inline-block;
+}
+.page-links li {
+    list-style: none;
+    display: inline;
+    margin: 0px 3px;
+}
+
+/* Styling for JavaScript viewer (if enabled) */
+
+#js-viewer {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 68, 202, 0.443);
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#js-viewer img {
+    max-width: 95%;
+    max-height: 80%;
+    height: auto;
+    width: auto;
+    border-radius: 10px;
+    border: 3px double #ff0097;
+}
+
+#js-viewer span {
+    margin-top: 10px;
+}
+
+#js-viewer span button {
+    border-radius: 10px;
+    padding: 10px;
+    color: rgb(202, 237, 255);
+    border: 2px solid #000000;
+    background-color: #00313f;
+    cursor: pointer;
+}
+
+#js-viewer span button:hover {
+    border: 2px solid #000000;
+    background-color: #000000;
+}

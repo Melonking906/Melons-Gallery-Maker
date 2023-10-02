@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+        <title>Register!</title>
+        <link rel="stylesheet" type="text/css" href="styles/ui.css" />
+    </head>
+    <body>
+        <h1>Register Your Copy!</h1>
+        <p>Please enter a valid registration key below to register your copy! Registration unlocks absolutely nothing :^]</p>
+        <hr />
+        <br />
+        <form>
+            <span class="inputRow"><label>Your Name:</label> <input type="text" id="reg-name" placeholder="Oz Womp" /></span><br />
+            <span class="inputRow"><label>Key:</label> <input type="text" id="reg-1" value="" placeholder="000" /> - <input type="text" id="reg-2" value="" placeholder="000" /> - <input type="text" id="reg-3" value="" placeholder="000" /></span><br />
+            <span class="inputRow"><button id="reg-button" type="button">Register!</button><button id="reg-order" type="button">Buy your copy!</button></span><br />
+            <p id="reg-feedback"></p>
+        </form>
+
+        <audio id="click-audio">
+            <source src="audio/click.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="interact-audio">
+            <source src="audio/drip.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="loading-audio" loop>
+            <source src="audio/happy-hippos.mod.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="success-audio">
+            <source src="audio/success.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="error-audio">
+            <source src="audio/error.mp3" type="audio/mpeg" />
+        </audio>
+        <script src="audio-extra.js"></script>
+        <script src="register.js"></script>
+    </body>
+</html>

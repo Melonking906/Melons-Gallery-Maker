@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{ALBUM_TITLE}</title>
+        <meta itemprop="name" content="{ALBUM_TITLE}" />
+        <meta itemprop="description" content="{ALBUM_INFO}" />
+
+        <link href="../gallery.css{ANTI_CACHE}" rel="stylesheet" type="text/css" media="all" />
+        {CUSTOM_CSS}
+    </head>
+    <body>
+        <header>
+            <h1><a href="../">&#8592; Zone Out!</a> - {GALLERY_TITLE} - {ALBUM_TITLE}</h1>
+            <p>{ALBUM_INFO}</p>
+        </header>
+        <section>
+            <nav class="page-links">{PAGELINKS}</nav>
+            <section id="photos">{PHOTOS}</section>
+            <nav class="page-links">{PAGELINKS}</nav>
+        </section>
+        <footer>Made with <a href="https://forum.melonland.net/index.php?topic=2088">Melon's Gallery {MAKER_VERSION}</a> - Updated: {LAST_UPDATE}</footer>
+    </body>
+</html>

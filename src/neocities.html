@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+        <title>Neocities Upload!</title>
+        <link rel="stylesheet" type="text/css" href="styles/ui.css" />
+    </head>
+    <body>
+        <h1>Neocities Upload!</h1>
+        <p>Use this widget to upload a gallery to your Neocities site!</p>
+        <p>If you have already uploaded your gallery in the past, it will compare images and only upload new or modified ones (this makes it faster)! All HTML and CSS files will be uploaded!</p>
+        <p>If you have multiple galleries, you can select them using the OUTPUT picker and then upload each separately!</p>
+        <hr />
+        <br />
+        <form>
+            <b id="selected-output"></b><br />
+            <hr />
+            <span>Neocities User:</span> <input type="text" id="user" value="melonking" /><br />
+            <span>Neocities Pass:</span> <input type="password" id="pass" value="" /><br />
+            <span>Where to upload?*</span> <input type="text" id="upload-path" value="/gallery" placeholder="/artworks/gallery" />
+            <p>*This is the folder on your site that the gallery will be uploaded to! It can be a folder or a path!</p>
+            <button id="upload" type="button">Upload to Neocities NOW!</button> <br />
+            <b id="upload-feedback"></b>
+        </form>
+
+        <audio id="click-audio">
+            <source src="audio/click.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="interact-audio">
+            <source src="audio/drip.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="loading-audio" loop>
+            <source src="audio/happy-hippos.mod.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="success-audio">
+            <source src="audio/success.mp3" type="audio/mpeg" />
+        </audio>
+        <audio id="error-audio">
+            <source src="audio/error.mp3" type="audio/mpeg" />
+        </audio>
+        <script src="audio-extra.js"></script>
+        <script src="neocities.js"></script>
+    </body>
+</html>

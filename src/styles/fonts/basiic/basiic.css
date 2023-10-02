@@ -1,0 +1,7 @@
+@font-face {
+    font-family: "basiic";
+    src: url("basiic.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}

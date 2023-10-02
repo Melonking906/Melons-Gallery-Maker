@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{TITLE}</title>
+        <meta itemprop="name" content="{GALLERY_TITLE}" />
+        <meta itemprop="description" content="{GALLERY_INFO}" />
+
+        <link href="gallery.css{ANTI_CACHE}" rel="stylesheet" type="text/css" media="all" />
+    </head>
+    <body>
+        <header>
+            <h1>{GALLERY_TITLE}</h1>
+            <p>{GALLERY_INFO}</p>
+            <p>Zone in: {COUNT_IMAGES} images : {COUNT_ALBUMS} albums ☺︎</p>
+        </header>
+        <section>
+            <nav id="index">
+                <h2>Areas</h2>
+                <ul>
+                    {ALBUMS}
+                </ul>
+            </nav>
+        </section>
+        <footer>Made with <a href="https://forum.melonland.net/index.php?topic=2088">Melon's Gallery {MAKER_VERSION}</a> - Updated: {LAST_UPDATE}</footer>
+    </body>
+</html>
