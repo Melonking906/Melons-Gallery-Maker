@@ -321,15 +321,15 @@ function neocitiesUpload(event, cityFiles, uploadPath, api) {
 
         // Convert files to NC upload request - lazy I know, but comeoooonn!
         let uploadFiles = [];
-        localFiles.forEach(function (localFile) {
+        localFiles.forEach((localFile) => {
             uploadFiles.push({
-                name: path.join(uploadPath, localFile.path),
+                name: path.posix.join(uploadPath, localFile.path),
                 path: path.join(dataForNeocitiesWindow.outputPath, localFile.path),
             });
         });
 
         // UPLOAD
-        api.upload(uploadFiles, function (resp) {
+        api.upload(uploadFiles, (resp) => {
             console.log(resp);
 
             if (resp.result == "error") {

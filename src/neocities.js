@@ -84,5 +84,6 @@ ipcRenderer.on("upload-error", (event, message) => {
 ipcRenderer.on("upload-success", (event, fileCount) => {
     nc.html.upload_feedback.innerHTML = "<span class='success'>Your gallery has been uploaded! " + fileCount + " files were updated!</span><br>";
     audio.success.play();
+    audio.loading.pause();
     setInputs(false);
 });

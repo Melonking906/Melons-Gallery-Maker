@@ -46,6 +46,12 @@
             "extraDistFiles": [
                 "./extras/*"
             ]
+        },
+        "win": {
+            "target": "portable"
+        },
+        "linux": {
+
         }
     }
 }

@@ -452,7 +452,7 @@ async function renderAlbums() {
                 if (err) {
                     return console.log(err);
                 }
-                storeManifestFile(writePath, path.join(album.webName, pageName));
+                storeManifestFile(writePath, path.posix.join(album.webName, pageName));
             });
 
             pageCounter++;
@@ -509,7 +509,7 @@ function processPhotos() {
             let outputPath = path.join(album.outputPath, gallery.settings.imagesDir, photo);
 
             let manifestEntry = {
-                path: path.join(album.webName, gallery.settings.imagesDir, photo),
+                path: path.posix.join(album.webName, gallery.settings.imagesDir, photo),
                 size: -1,
                 updated_at: undefined,
                 source: sourceHash,
@@ -525,7 +525,7 @@ function processPhotos() {
                 let jpegName = fileName + ".jpg";
 
                 outputPath = path.join(album.outputPath, gallery.settings.imagesDir, jpegName);
-                manifestEntry.path = path.join(album.webName, gallery.settings.imagesDir, jpegName);
+                manifestEntry.path = path.posix.join(album.webName, gallery.settings.imagesDir, jpegName);
 
                 if (!shouldPhotoBeProcessed(manifestEntry, manifestList)) {
                     gallery.loaded.imageProcess++;
@@ -603,7 +603,7 @@ function processPhotos() {
                 let outputThumbPath = path.join(album.outputPath, gallery.settings.thumbnailsDir, thumbName);
 
                 let manifestEntryThumb = {
-                    path: path.join(album.webName, gallery.settings.thumbnailsDir, thumbName),
+                    path: path.posix.join(album.webName, gallery.settings.thumbnailsDir, thumbName),
                     size: -1,
                     updated_at: undefined,
                     source: sourceHash,
