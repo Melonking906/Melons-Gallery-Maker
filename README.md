@@ -1,4 +1,4 @@
-# Melons-Gallery
+# Melon's Gallery Maker
 A little static HTML gallery generator!
 
 ## How to build:
