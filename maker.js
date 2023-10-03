@@ -77,8 +77,8 @@ function resetMemory() {
     gallery.manifest = {};
     gallery.manifest.info = {};
     gallery.manifest.info.maker = "Melon's Gallery Maker!";
-    gallery.manifest.info.updated_at = getRFC2822Timestamp();
     gallery.manifest.info.version = storage.getSync("version");
+    gallery.manifest.info.updated_at = getRFC2822Timestamp();
     gallery.manifest.settings = {};
     gallery.manifest.images = []; // A list of images that have actually been processed before and are up to date
     gallery.manifest.files = [];
