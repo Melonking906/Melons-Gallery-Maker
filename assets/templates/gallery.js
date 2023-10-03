@@ -1,4 +1,4 @@
-// +++ Melon's Micro Gallery Viewer v0.1d - https://melonking.net/free/software +++
+// +++ Melon's Micro Gallery Viewer v0.1d - https://melonking.net/melon?z=/free/software/gallery-maker +++
 
 let al = {};
 
