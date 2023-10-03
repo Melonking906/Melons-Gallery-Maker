@@ -313,7 +313,7 @@ function loadAlbums() {
 function getAlbumLinks(pathRoot) {
     let albumLinks = "";
     gallery.albums.forEach(function (album) {
-        albumLinks += '<li><a href="' + pathRoot + album.webName + '">' + album.safeName + "</a></li>";
+        albumLinks += '<li><a href="' + path.posix.join(pathRoot, album.webName, "index.html") + '">' + album.safeName + "</a></li>";
     });
     return albumLinks;
 }
