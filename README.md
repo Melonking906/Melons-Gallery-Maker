@@ -16,5 +16,6 @@ Forum Thread: https://forum.melonland.net/index.php?topic=2088
 
 Linux users:
 Run "apt install libvips" before trying to run the AppImage
+
 Mac (Intel) users:
 Run "brew install vips" before trying to run the app
