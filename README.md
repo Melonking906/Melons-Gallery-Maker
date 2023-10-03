@@ -1,7 +1,7 @@
 # Melon's Gallery Maker
 A little static HTML gallery generator!
 
-Support Page: https://melonking.net/melon?z=/free/software
+Support Page: https://melonking.net/melon?z=/free/software/gallery-maker
 Forum Thread: https://forum.melonland.net/index.php?topic=2088
 
 ## How to build:
@@ -13,9 +13,6 @@ Forum Thread: https://forum.melonland.net/index.php?topic=2088
 * Check the "dist" folder for your new exe/app
 
 ## Troubleshooting:
-
-Linux users:
-Run "apt install libvips" before trying to run the AppImage
-
-Mac (Intel) users:
-Run "brew install vips" before trying to run the app
+JavaScript Error related to the "sharp" package:
+* Linux users: Run `apt install libvips` before trying to run the AppImage
+* Mac users: Run `brew install vips` before trying to run the app
