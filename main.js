@@ -46,8 +46,8 @@ const createNeocitiesWindow = () => {
 
 const createRegisterWindow = () => {
     registerWindow = new BrowserWindow({
-        width: 600,
-        height: 400,
+        width: 670,
+        height: 380,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
