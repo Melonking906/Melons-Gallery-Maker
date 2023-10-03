@@ -1,6 +1,7 @@
 // Melon's Gallery Maker!
 // Info topic - https://forum.melonland.net/index.php?topic=2088
 
+const storage = require("electron-json-storage");
 const { DateTime } = require("luxon");
 const fs = require("fs-extra");
 const crypto = require("crypto");
@@ -77,6 +78,7 @@ function resetMemory() {
     gallery.manifest.info = {};
     gallery.manifest.info.maker = "Melon's Gallery Maker!";
     gallery.manifest.info.updated_at = getRFC2822Timestamp();
+    gallery.manifest.info.version = storage.getSync("version");
     gallery.manifest.settings = {};
     gallery.manifest.images = []; // A list of images that have actually been processed before and are up to date
     gallery.manifest.files = [];
@@ -90,6 +92,7 @@ async function make(makeData, makeCallback) {
     console.log("Starting Gallery Render!");
 
     resetMemory();
+    console.log("Version: " + gallery.manifest.info.version);
 
     // Get the user selected input and output
     gallery.settings.photosDir = makeData.input;
@@ -323,7 +326,7 @@ function renderIndex() {
     newIndex = newIndex.replaceAll("{COUNT_ALBUMS}", gallery.albums.length);
     newIndex = newIndex.replaceAll("{GALLERY_TITLE}", htmlSafeString(gallery.settings.title));
     newIndex = newIndex.replaceAll("{GALLERY_INFO}", gallery.settings.info);
-    newIndex = newIndex.replaceAll("{MAKER_VERSION}", "v" + process.env.npm_package_version);
+    newIndex = newIndex.replaceAll("{MAKER_VERSION}", "v" + gallery.manifest.info.version);
     newIndex = newIndex.replaceAll("{LAST_UPDATE}", gallery.renderTime);
     newIndex = newIndex.replaceAll("{ANTI_CACHE}", getAntiCacheQuery());
 
@@ -370,7 +373,7 @@ async function renderAlbums() {
 
             //=== Extras
             newPage = newPage.replaceAll("{LAST_UPDATE}", gallery.renderTime);
-            newPage = newPage.replaceAll("{MAKER_VERSION}", "v" + process.env.npm_package_version);
+            newPage = newPage.replaceAll("{MAKER_VERSION}", "v" + gallery.manifest.info.version);
             newPage = newPage.replace("{ALBUMS}", getAlbumLinks("../"));
             newPage = newPage.replaceAll("{ANTI_CACHE}", getAntiCacheQuery());
 
