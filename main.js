@@ -101,7 +101,7 @@ app.whenReady().then(() => {
                 {
                     label: "Visit the Support Page",
                     click: function () {
-                        shell.openExternal("https://melonking.net/melon?z=/free/software");
+                        shell.openExternal("https://melonking.net/melon?z=/free/software/gallery-maker");
                     },
                 },
                 {
