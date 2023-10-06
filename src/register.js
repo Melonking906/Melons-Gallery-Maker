@@ -89,7 +89,7 @@ rg.html.order.addEventListener("click", () => {
 function setInputs(disabled) {
     let inputs = Array.from(document.getElementsByTagName("input"));
     let buttons = Array.from(document.getElementsByTagName("button"));
-    let elements = inputs.concat(textareas).concat(buttons);
+    let elements = inputs.concat(buttons);
     for (let i = 0; i < elements.length; i++) {
         elements[i].disabled = disabled;
     }
