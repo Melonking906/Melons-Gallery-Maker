@@ -6,10 +6,10 @@ const { DateTime } = require("luxon");
 const fs = require("fs-extra");
 const crypto = require("crypto");
 const path = require("path");
-var _ = require("lodash");
+const _ = require("lodash");
 const sharp = require("sharp");
 const { minify } = require("html-minifier");
-var sanitize = require("sanitize-filename");
+const sanitize = require("sanitize-filename");
 const prettify = require("html-prettify");
 
 let gallery = {};
@@ -512,7 +512,7 @@ function renderAlbums() {
 }
 
 // Update the manifests data and write it to file
-function renderManifest(makeSettings) {
+async function renderManifest(makeSettings) {
     let filepath = path.join(gallery.settings.outputDir, gallery.otherFiles.manifest);
     gallery.manifest.settings = makeSettings;
     gallery.manifest.info.version = storage.getSync("version");
@@ -537,15 +537,16 @@ function renderManifest(makeSettings) {
 
 // **** Image Processing ****
 
+// Tested - there is no benefit to making any loop of this async
 function processPhotos() {
     console.log("Starting Photo Processing!");
 
     // Create a list of all existing images in the manifest
     let manifestList = gallery.manifest.images.map((a) => a.path);
     // For Each Album
-    gallery.albums.forEach(function (album) {
+    gallery.albums.forEach((album) => {
         // For Each Photo
-        album.files.forEach(function (photo) {
+        album.files.forEach((photo) => {
             let sourcePath = path.join(album.sourcePath, photo);
 
             let sourceHash = crypto
@@ -667,7 +668,7 @@ function processPhotos() {
                     sharp(sourcePath)
                         .rotate()
                         .resize(resizeThumbOpt)
-                        .jpeg({ quality: 75, progressive: true })
+                        .jpeg({ quality: 70, progressive: true })
                         .toFile(outputThumbPath, (err, info) => {
                             gallery.loaded.thumbnailProcess++;
                             if (err) {
