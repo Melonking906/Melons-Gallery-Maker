@@ -19,7 +19,7 @@ header h1 {
 
 header h1 img {
     width: 90%;
-    max-width: 600px;
+    max-width: 500px;
     filter: drop-shadow(3px 4px 0px rgba(78, 31, 0, 0.827));
 }
 
@@ -27,6 +27,15 @@ header span h2 {
     width: 100%;
     background-image: none;
     animation: wobble 4s ease-in-out infinite;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
 }
 
 img {
@@ -136,11 +145,6 @@ label {
 }
 #upload:hover {
     background-color: rgb(255, 172, 100);
-}
-
-#registration {
-    cursor: pointer;
-    text-decoration: underline;
 }
 
 .inputRow {

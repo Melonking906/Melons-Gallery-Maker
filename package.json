@@ -3,6 +3,7 @@
         "electron-json-storage": "^4.6.0",
         "fs-extra": "^11.1.1",
         "html-minifier": "^4.0.0",
+        "html-prettify": "^1.0.7",
         "lodash": "^4.17.21",
         "luxon": "^3.4.3",
         "neocities-extended": "github:thatcomputerguy0101/neocities-node-extended",
@@ -13,7 +14,7 @@
     },
     "name": "MelonsGalleryMaker",
     "productName": "Melon's Gallery Maker",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A little static HTML gallery generator!",
     "main": "main.js",
     "devDependencies": {

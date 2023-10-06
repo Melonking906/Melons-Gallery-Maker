@@ -4,21 +4,23 @@
         <meta charset="UTF-8" />
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
         <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-        <title>Register!</title>
+        <title>Update!</title>
         <link rel="stylesheet" type="text/css" href="styles/fonts/basiic/basiic.css" />
         <link rel="stylesheet" type="text/css" href="styles/ui.css" />
     </head>
     <body>
-        <h1>Register Your Copy!</h1>
-        <p>Please enter a valid registration key below to register your copy!<br />Registration unlocks absolutely nothing :^]</p>
-        <hr />
-        <br />
-        <form>
-            <span class="inputRow"><label>Your Name:</label> <input type="text" id="reg-name" placeholder="Oz Womp" /></span><br />
-            <span class="inputRow"><label>Key:</label> <input type="text" id="reg-1" value="" placeholder="000" /> - <input type="text" id="reg-2" value="" placeholder="000" /> - <input type="text" id="reg-3" value="" placeholder="000" /></span><br />
-            <span class="inputRow"><button id="reg-button" type="button">Register!</button><button id="reg-order" type="button">Buy your copy!</button></span><br />
-            <p id="reg-feedback"></p>
-        </form>
+        <h1>Update Alert!</h1>
+        <p>Your gallery is from an older version of Gallery Maker! There may be changes to the templates and scripts included!</p>
+        <p>I recommend you follow these steps!</p>
+        <ol>
+            <li><a id="open-templates">Open your templates folder</a></li>
+            <li>Backup your templates to your desktop</li>
+            <li>Delete your old templates</li>
+            <li>Let the Gallery maker <a id="generate-templates">generate new templates</a></li>
+            <li>Re-apply your changes to the new template files!</li>
+        </ol>
+        <p>This will ensure that your gallery is fully compatible with this version of Gallery Maker!</p>
+        <p><a id="open-chnagelog">Visit here to see a change-log</a>!</p>
 
         <audio id="click-audio">
             <source src="audio/click.mp3" type="audio/mpeg" />
@@ -35,7 +37,8 @@
         <audio id="error-audio">
             <source src="audio/error.mp3" type="audio/mpeg" />
         </audio>
+
         <script src="audio-extra.js"></script>
-        <script src="register.js"></script>
+        <script src="changes.js"></script>
     </body>
 </html>

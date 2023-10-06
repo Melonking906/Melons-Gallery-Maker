@@ -2,8 +2,9 @@
 <html lang="en">
     <head>
         <title>{ALBUM_TITLE}</title>
-        <meta itemprop="name" content="{ALBUM_TITLE}" />
-        <meta itemprop="description" content="{ALBUM_INFO}" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="{ALBUM_INFO}" />
 
         <link href="../gallery.css{ANTI_CACHE}" rel="stylesheet" type="text/css" media="all" />
         {CUSTOM_CSS}
@@ -14,11 +15,15 @@
             <p>{ALBUM_INFO}</p>
             <a href="../index.html">&#8592; Back to the index!</a>
         </header>
+
         <section>
             <nav class="page-links">{PAGELINKS}</nav>
             <section id="photos">{PHOTOS}</section>
             <nav class="page-links">{PAGELINKS}</nav>
         </section>
+
         <footer>Made with <a href="https://melonking.net/melon?z=/free/software/gallery-maker" target="_blank">Melon's Gallery {MAKER_VERSION}</a> - Updated: {LAST_UPDATE}</footer>
+
+        <audio autoplay loop>{ALBUM_MUSIC}</audio>
     </body>
 </html>

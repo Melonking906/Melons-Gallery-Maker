@@ -10,6 +10,7 @@ var _ = require("lodash");
 const sharp = require("sharp");
 const { minify } = require("html-minifier");
 var sanitize = require("sanitize-filename");
+const prettify = require("html-prettify");
 
 let gallery = {};
 
@@ -92,7 +93,7 @@ async function make(makeData, makeCallback) {
     console.log("Starting Gallery Render!");
 
     resetMemory();
-    console.log("Version: " + gallery.manifest.info.version);
+    console.log("Version: " + storage.getSync("version"));
 
     // Get the user selected input and output
     gallery.settings.photosDir = makeData.input;
@@ -118,7 +119,7 @@ async function make(makeData, makeCallback) {
     await loadingWaitTemplates();
 
     // Sort albums by name.
-    gallery.albums = gallery.albums.sort(function (a, b) {
+    gallery.albums = gallery.albums.sort((a, b) => {
         let textA = a.name.toUpperCase();
         let textB = b.name.toUpperCase();
         return textA < textB ? -1 : textA > textB ? 1 : 0;
@@ -152,7 +153,7 @@ function loadSettings(file) {
 function loadManifest() {
     let filepath = path.join(gallery.settings.outputDir, gallery.otherFiles.manifest);
 
-    fs.readFile(filepath, "utf8", function (err, data) {
+    fs.readFile(filepath, "utf8", (err, data) => {
         if (err) {
             return console.log("Error loading manifest or no file found!: " + err);
         }
@@ -169,7 +170,7 @@ function loadTemplates() {
         console.log(filepath);
 
         // Import template files
-        fs.readFile(filepath, "utf8", function (err, data) {
+        fs.readFile(filepath, "utf8", (err, data) => {
             if (err) {
                 return console.log("File Load Error: " + err);
             }
@@ -206,7 +207,7 @@ function loadTemplates() {
 
 // Reads albums and photo files and builds folder structure
 function loadAlbums() {
-    fs.readdir(gallery.settings.photosDir, function (err, albumNames) {
+    fs.readdir(gallery.settings.photosDir, (err, albumNames) => {
         if (err) {
             return console.log("Unable to scan directory: " + err);
         }
@@ -229,7 +230,7 @@ function loadAlbums() {
                 return;
             }
             // Get files in the albums folder
-            fs.readdir(folderPath, function (err, files) {
+            fs.readdir(folderPath, (err, files) => {
                 if (err) {
                     return console.log("Unable to scan directory: " + err);
                 }
@@ -246,6 +247,8 @@ function loadAlbums() {
                 album.outputPath = path.join(gallery.settings.outputDir, album.webName);
                 album.css = "";
                 album.txt = "";
+                album.mp3 = undefined;
+                album.fileInfos = [];
                 album.files = [];
 
                 // Generate the file structure for the albumName
@@ -253,7 +256,7 @@ function loadAlbums() {
                 fs.ensureDirSync(path.join(album.outputPath, gallery.settings.imagesDir));
                 fs.ensureDirSync(path.join(album.outputPath, gallery.settings.thumbnailsDir));
 
-                files.forEach(function (file) {
+                files.forEach((file) => {
                     let fileType = path.extname(file).toLowerCase();
                     // Custom CSS support
                     if (fileType == ".css") {
@@ -268,7 +271,33 @@ function loadAlbums() {
                     // Custom Info File
                     if (fileType == ".txt") {
                         fs.readFile(path.join(album.sourcePath, file), "utf8", function (err, data) {
-                            album.txt = data;
+                            let infos = data.split("#");
+                            album.txt = infos[0]; // Sets the album main info from the first line
+
+                            // Here we try to extract filenames and text from the info file!
+                            for (let i = 1; i < infos.length; i++) {
+                                let infoFile = "";
+                                let infoText = "";
+                                try {
+                                    let infoParts = infos[i].split(/\r?\n/); // Split on new line
+                                    infoFile = infoParts[0].trim();
+                                    infoText = infos[i].replace(infoFile, "").trim();
+                                } catch (e) {
+                                    console.log("There was an error processing the info file; skipping an entry in: " + album.name);
+                                    continue;
+                                }
+                                album.fileInfos[infoFile] = infoText;
+                            }
+                        });
+                        return;
+                    }
+
+                    // Album Music
+                    if (fileType == ".mp3") {
+                        album.mp3 = file;
+                        fs.copyFile(path.join(album.sourcePath, album.mp3), path.join(album.outputPath, album.mp3), (err) => {
+                            if (err) throw err;
+                            console.log("MP3 Found for albumName: " + albumName);
                         });
                         return;
                     }
@@ -326,13 +355,16 @@ function renderIndex() {
     newIndex = newIndex.replaceAll("{COUNT_ALBUMS}", gallery.albums.length);
     newIndex = newIndex.replaceAll("{GALLERY_TITLE}", htmlSafeString(gallery.settings.title));
     newIndex = newIndex.replaceAll("{GALLERY_INFO}", gallery.settings.info);
-    newIndex = newIndex.replaceAll("{MAKER_VERSION}", "v" + gallery.manifest.info.version);
+    newIndex = newIndex.replaceAll("{MAKER_VERSION}", "v" + storage.getSync("version"));
     newIndex = newIndex.replaceAll("{LAST_UPDATE}", gallery.renderTime);
     newIndex = newIndex.replaceAll("{ANTI_CACHE}", getAntiCacheQuery());
 
     gallery.loaded.fileProcess++;
     let writePath = path.join(gallery.settings.outputDir, gallery.templates.index_html.name);
-    fs.writeFile(writePath, compressHTML(newIndex), function (err) {
+
+    newIndex = compressHTML(newIndex);
+
+    fs.writeFile(writePath, newIndex, (err) => {
         if (err) {
             console.log("Index write error: " + err);
         }
@@ -341,13 +373,13 @@ function renderIndex() {
 }
 
 //For each album, split images into chunks and then render a page for each
-async function renderAlbums() {
-    gallery.albums.forEach(function (album) {
+function renderAlbums() {
+    gallery.albums.forEach((album) => {
         let pageCounter = 0;
         let albumChucks = _.chunk(album.files, gallery.settings.photosPerAlbumPage);
 
         //Create each page
-        albumChucks.forEach(function (albumChunk) {
+        albumChucks.forEach((albumChunk) => {
             let newPage = gallery.templates.gallery_page_template_html.data;
 
             //=== Title rendering
@@ -371,15 +403,23 @@ async function renderAlbums() {
                 newPage = newPage.replace("{CUSTOM_CSS}", "");
             }
 
+            //=== MP3
+            if (album.mp3 != undefined) {
+                newPage = newPage.replace("{ALBUM_MUSIC}", '<source src="' + album.mp3 + '" type="audio/mpeg" />');
+            } else {
+                newPage = newPage.replace("{ALBUM_MUSIC}", "");
+            }
+
             //=== Extras
             newPage = newPage.replaceAll("{LAST_UPDATE}", gallery.renderTime);
-            newPage = newPage.replaceAll("{MAKER_VERSION}", "v" + gallery.manifest.info.version);
+            newPage = newPage.replaceAll("{MAKER_VERSION}", "v" + storage.getSync("version"));
             newPage = newPage.replace("{ALBUMS}", getAlbumLinks("../"));
             newPage = newPage.replaceAll("{ANTI_CACHE}", getAntiCacheQuery());
 
             //=== Photo rendering
             let photosHTML = "";
-            albumChunk.forEach(function (photo) {
+            albumChunk.forEach((photo) => {
+                let photoInfo = album.fileInfos[photo];
                 // After this point photo is web safe, source is lost
                 photo = sanitize(photo);
                 let fileType = path.extname(photo).toLowerCase();
@@ -398,11 +438,16 @@ async function renderAlbums() {
                 }
 
                 // Generate HTML
-                photosHTML += '<a href="' + photoAddress + '" target="_blank"><img src="' + thumbAddress + '" />';
+                photosHTML += "<figure>";
+                photosHTML += '<a href="' + photoAddress + '" target="_blank"><img src="' + thumbAddress + '" alt="" />';
                 if (gallery.settings.showImageTitles) {
-                    photosHTML += "<span>" + photo + "</span>";
+                    photosHTML += '<span class="photo-filename">' + photo + "</span>";
                 }
-                photosHTML += "</a>\n";
+                photosHTML += "</a>";
+                if (photoInfo != undefined && photoInfo != "") {
+                    photosHTML += '<figcaption class="photo-info">' + htmlSafeString(photoInfo) + "</figcaption>";
+                }
+                photosHTML += "</figure>\n";
             });
             newPage = newPage.replace("{PHOTOS}", photosHTML);
 
@@ -422,9 +467,9 @@ async function renderAlbums() {
                     pageLink = "index.html";
                 }
                 if (i == pageCounter) {
-                    pageLinks += "<li><b>" + i + "</b></li>\n";
+                    pageLinks += "<li><b>" + i + "</b></li>";
                 } else {
-                    pageLinks += '<li><a href="' + pageLink + '">' + i + "</a></li>\n";
+                    pageLinks += '<li><a href="' + pageLink + '">' + i + "</a></li>";
                 }
             }
             pageLinks += "</ul>";
@@ -451,7 +496,10 @@ async function renderAlbums() {
 
             gallery.loaded.fileProcess++;
             let writePath = path.join(album.outputPath, pageName);
-            fs.writeFile(writePath, compressHTML(newPage), function (err) {
+
+            newPage = compressHTML(newPage);
+
+            fs.writeFile(writePath, newPage, function (err) {
                 if (err) {
                     return console.log(err);
                 }
@@ -467,6 +515,7 @@ async function renderAlbums() {
 function renderManifest(makeSettings) {
     let filepath = path.join(gallery.settings.outputDir, gallery.otherFiles.manifest);
     gallery.manifest.settings = makeSettings;
+    gallery.manifest.info.version = storage.getSync("version");
     gallery.manifest.info.updated_at = getRFC2822Timestamp();
 
     // Remove dead images from the manifest that are no longer in the gallery - very bad method!!
@@ -727,7 +776,8 @@ function getAntiCacheQuery() {
 
 function compressHTML(html) {
     if (!gallery.settings.doHTMLCompress) {
-        return html;
+        // If we are not compressing it, make it look nice!
+        return prettify(html, { count: 4 });
     }
 
     return minify(html, {

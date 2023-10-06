@@ -1,4 +1,4 @@
-/* Melon's Gallery Maker! - Pixel Shop v0.1 */
+/* Melon's Gallery Maker! - Pixel Shop v0.2 */
 
 @import url("https://melonking.net/styles/fonts/BPdots/BPdotsDiamond.css");
 @import url("https://melonking.net/styles/fonts/BPdots/BPdotsDiamondBold.css");
@@ -73,9 +73,15 @@ footer {
 
 /* Gallery Pages */
 
-#photos a {
+#photos {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+#photos figure {
     margin: 5px;
-    display: inline-block;
+    max-width: min-content;
 }
 
 #photos img {
@@ -92,6 +98,10 @@ footer {
     display: block;
 }
 
+#photos figcaption {
+    padding: 10px 0px;
+}
+
 .page-links {
     text-align: center;
 }
@@ -106,6 +116,19 @@ footer {
 }
 .page-links li:after {
     content: ",";
+}
+
+/* Mobile Styling */
+
+@media (max-width: 800px) {
+    #photos figure {
+        width: 95%;
+        max-width: unset;
+    }
+
+    #photos img {
+        width: 100%;
+    }
 }
 
 /* Styling for JavaScript viewer (if enabled) */

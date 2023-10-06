@@ -26,7 +26,7 @@ document.addEventListener("mouseover", (e) => {
 });
 
 document.addEventListener("click", (e) => {
-    if (e.target.tagName == "BUTTON") {
+    if (e.target.tagName == "BUTTON" || e.target.tagName == "A") {
         audio.click.play();
     }
 });

@@ -13,6 +13,7 @@ let galleryFolder = "MelonGallery";
 let mainWindow = undefined;
 let neocitiesWindow = undefined;
 let registerWindow = undefined;
+let chnagesWindow = undefined;
 
 let dataForNeocitiesWindow = {};
 
@@ -58,6 +59,20 @@ const createRegisterWindow = () => {
     // registerWindow.webContents.openDevTools();
 };
 
+const createChangesWindow = () => {
+    chnagesWindow = new BrowserWindow({
+        width: 500,
+        height: 400,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+    });
+
+    chnagesWindow.loadFile("src/changes.html");
+    // chnagesWindow.webContents.openDevTools();
+};
+
 app.whenReady().then(() => {
     // Menu Bar
     let menuTemplate = [
@@ -99,15 +114,21 @@ app.whenReady().then(() => {
             label: "Help",
             submenu: [
                 {
-                    label: "Visit the Support Page",
+                    label: "Visit the Wiki",
                     click: function () {
-                        shell.openExternal("https://melonking.net/melon?z=/free/software/gallery-maker");
+                        shell.openExternal("https://wiki.melonland.net/gallery_maker");
                     },
                 },
                 {
                     label: "Visit the Forum Thread",
                     click: function () {
                         shell.openExternal("https://forum.melonland.net/index.php?topic=2088");
+                    },
+                },
+                {
+                    label: "Visit the Info Page",
+                    click: function () {
+                        shell.openExternal("https://melonking.net/melon?z=/free/software/gallery-maker");
                     },
                 },
                 {
@@ -205,6 +226,10 @@ app.whenReady().then(() => {
     ipcMain.on("do-make", (event, makeData) => {
         // Make the Gallery Folder if missing
         fs.ensureDirSync(path.join(makeData.input, galleryFolder));
+
+        // Add a version number to the settings file for future updates
+        makeData.settings.version = app.getVersion();
+
         // Save any new settings
         fs.writeFileSync(path.join(makeData.input, galleryFolder, "/settings.json"), JSON.stringify(makeData.settings), { encoding: "utf8", flag: "w" });
 
@@ -414,6 +439,11 @@ function loadSettings(sourcePath) {
             console.log("No settings file found!");
             return;
         }
+
+        if (JSON.parse(data).version != app.getVersion()) {
+            createChangesWindow();
+        }
+
         mainWindow.webContents.send("new-settings", data);
     });
 }

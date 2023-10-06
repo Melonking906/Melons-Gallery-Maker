@@ -290,6 +290,7 @@ __metadata:
     electron-squirrel-startup: ^1.0.0
     fs-extra: ^11.1.1
     html-minifier: ^4.0.0
+    html-prettify: ^1.0.7
     lodash: ^4.17.21
     luxon: ^3.4.3
     neocities-extended: "github:thatcomputerguy0101/neocities-node-extended"
@@ -1742,6 +1743,13 @@ __metadata:
   bin:
     html-minifier: ./cli.js
   checksum: b426aee771d9da104c1c9554e3ebd3a4f483d2ce01f4dcc4156ba33a5959044acf6bea192d5ae63b290cdb92c30a9d07fd6924c65609aa82382ce411328f94ca
+  languageName: node
+  linkType: hard
+
+"html-prettify@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "html-prettify@npm:1.0.7"
+  checksum: 505ef9aac51a4da8f74ea81e173d47cfd152f97260cdd2afa8bffa342feebc5230a41e91e35bb1c4fba32ed1b358e5bcaaf1272d61960ede5eebf057a51d1b46
   languageName: node
   linkType: hard
 

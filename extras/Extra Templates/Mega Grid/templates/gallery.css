@@ -1,4 +1,4 @@
-/* Melon's Gallery Maker! - Mega Grid v0.1 */
+/* Melon's Gallery Maker! - Mega Grid v0.2 */
 
 body {
     font-family: monospace;
@@ -44,6 +44,16 @@ footer {
     flex-wrap: wrap;
 }
 
+#photos a {
+    display: flex;
+    flex-flow: column;
+}
+
+#photos figure {
+    margin: 0px;
+    max-width: min-content;
+}
+
 #photos img {
     object-fit: cover;
     width: 50px;
@@ -56,11 +66,19 @@ footer {
     opacity: 0.3;
 }
 
-#photos span {
-    display: block;
+#photos span,
+#photos figcaption {
     font-size: 0.5em;
     word-break: break-all;
-    max-width: 45px;
+    max-width: 95%;
+}
+
+#photos span {
+    display: block;
+}
+
+#photos figcaption {
+    padding: 6px 0px;
 }
 
 .page-links ul {
@@ -73,6 +91,20 @@ footer {
     display: inline;
     margin: 0px 1px;
     padding: 0px;
+}
+
+/* Mobile Styling */
+
+@media (max-width: 800px) {
+    #photos img {
+        width: 100px;
+        height: 100px;
+    }
+
+    #photos span,
+    #photos figcaption {
+        font-size: 0.8em;
+    }
 }
 
 /* Styling for JavaScript viewer (if enabled) */

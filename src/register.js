@@ -28,6 +28,11 @@ rg.three.max = 300;
 
 ipcRenderer.send("get-storage-path");
 
+ipcRenderer.on("data-request", (event, data) => {
+    rg.storagePath = data;
+    start();
+});
+
 function start() {
     storage.setDataPath(rg.storagePath);
 
@@ -41,6 +46,7 @@ function start() {
     });
     storage.has("reg_name", function (error, hasKey) {
         if (hasKey) {
+            setInputs(true);
             rg.html.name.value = storage.getSync("reg_name");
             rg.html.feedback.innerHTML = "Thank you for registering " + name + " !!!";
         }
@@ -80,7 +86,11 @@ rg.html.order.addEventListener("click", () => {
     shell.openExternal("https://melonking.net/melon?z=/shop/");
 });
 
-ipcRenderer.on("data-request", (event, data) => {
-    rg.storagePath = data;
-    start();
-});
+function setInputs(disabled) {
+    let inputs = Array.from(document.getElementsByTagName("input"));
+    let buttons = Array.from(document.getElementsByTagName("button"));
+    let elements = inputs.concat(textareas).concat(buttons);
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].disabled = disabled;
+    }
+}

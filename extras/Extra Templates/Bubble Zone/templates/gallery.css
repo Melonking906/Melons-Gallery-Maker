@@ -1,4 +1,4 @@
-/* Melon's Gallery Maker! - Bubble Zone! v0.1 */
+/* Melon's Gallery Maker! - Bubble Zone! v0.2 */
 
 body {
     font-family: "Tahoma", san-serif;
@@ -80,9 +80,13 @@ footer {
 
 /* Gallery Pages */
 
-#photos a {
+#photos {
+}
+
+#photos figure {
     margin: 10px;
     display: inline-block;
+    max-width: min-content;
 }
 
 #photos img {
@@ -96,38 +100,38 @@ footer {
     /* image-rendering: pixelated; */
 }
 
-#photos a:nth-child(5n) {
+#photos figure:nth-child(5n) {
     margin: 10px;
     float: left;
 }
-#photos a:nth-child(5n) img {
+#photos figure:nth-child(5n) img {
     width: 250px;
     height: 250px;
 }
 
-#photos a:nth-child(2n) {
+#photos figure:nth-child(2n) {
     margin: 30px;
     float: right;
 }
-#photos a:nth-child(2n) img {
+#photos figure:nth-child(2n) img {
     width: 170px;
     height: 170px;
 }
 
-#photos a:nth-child(3n) {
+#photos figure:nth-child(3n) {
     margin: 80px;
     float: left;
 }
-#photos a:nth-child(3n) img {
+#photos figure:nth-child(3n) img {
     width: 300px;
     height: 300px;
 }
 
-#photos a:nth-child(7n) {
+#photos figure:nth-child(7n) {
     margin: 200px;
     float: right;
 }
-#photos a:nth-child(7n) img {
+#photos figure:nth-child(7n) img {
     width: 240px;
     height: 240px;
 }
@@ -139,6 +143,10 @@ footer {
 #photos span {
     text-align: center;
     display: block;
+}
+
+#photos figcaption {
+    padding: 10px 0px;
 }
 
 .page-links {

@@ -2,8 +2,9 @@
 <html lang="en">
     <head>
         <title>{GALLERY_TITLE}</title>
-        <meta itemprop="name" content="{GALLERY_TITLE}" />
-        <meta itemprop="description" content="{GALLERY_INFO}" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="{GALLERY_INFO}" />
 
         <link href="gallery.css{ANTI_CACHE}" rel="stylesheet" type="text/css" media="all" />
     </head>
@@ -13,6 +14,7 @@
             <p>{GALLERY_INFO}</p>
             <p>This gallery contains {COUNT_IMAGES} images in {COUNT_ALBUMS} albums!</p>
         </header>
+
         <section>
             <nav id="index">
                 <h2>Album Index</h2>
@@ -21,6 +23,11 @@
                 </ul>
             </nav>
         </section>
+
         <footer>Made with <a href="https://melonking.net/melon?z=/free/software/gallery-maker" target="_blank">Melon's Gallery {MAKER_VERSION}</a> - Updated: {LAST_UPDATE}</footer>
+
+        <audio autoplay loop>
+            <!-- <source src="my-song.mp3" type="audio/mpeg" /> -->
+        </audio>
     </body>
 </html>
