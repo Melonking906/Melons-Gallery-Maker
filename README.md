@@ -1,6 +1,7 @@
 # Melon's Gallery Maker
 A little static HTML gallery generator!
 
+* Wiki Pgae: https://wiki.melonland.net/gallery_maker
 * Info Page: https://melonking.net/melon?z=/free/software/gallery-maker
 * Forum Thread: https://forum.melonland.net/index.php?topic=2088
 
@@ -16,4 +17,3 @@ A little static HTML gallery generator!
 ## Troubleshooting:
 JavaScript Error related to the "sharp" package:
 * Linux users: Run `apt install libvips` before trying to run the AppImage
-* Mac users: Run `brew install vips` before trying to run the app
