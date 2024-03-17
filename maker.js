@@ -40,8 +40,8 @@ gallery.settings.thumbnailsDir = "thumbnails"; // /albums/thumbnails - Thumbnail
 gallery.settings.imagesDir = "images"; // /albums/images - Resized web images
 
 // DO NOT EDIT BELOW HERE
-gallery.supportedFileTypes = [".png", ".jpeg", ".jpg", ".gif", ".tiff", ".webp"];
-gallery.toJPEGFormats = [".jp2", ".tiff"];
+gallery.supportedFileTypes = [".png", ".jpeg", ".jpg", ".gif", ".tiff", ".tif", ".webp"];
+gallery.toJPEGFormats = [".jp2", ".tiff", ".tif"];
 gallery.singleCopyFormats = [".gif"];
 // libvips is needed for jp2
 
@@ -272,7 +272,7 @@ function loadAlbums() {
                     if (fileType == ".txt") {
                         fs.readFile(path.join(album.sourcePath, file), "utf8", function (err, data) {
                             let infos = data.split("#");
-                            album.txt = infos[0]; // Sets the album main info from the first line
+                            album.txt = htmlSafeString(infos[0]); // Sets the album main info from the first line
 
                             // Here we try to extract filenames and text from the info file!
                             for (let i = 1; i < infos.length; i++) {
@@ -281,7 +281,7 @@ function loadAlbums() {
                                 try {
                                     let infoParts = infos[i].split(/\r?\n/); // Split on new line
                                     infoFile = infoParts[0].trim();
-                                    infoText = infos[i].replace(infoFile, "").trim();
+                                    infoText = htmlSafeString(infos[i].replace(infoFile, "").trim());
                                 } catch (e) {
                                     console.log("There was an error processing the info file; skipping an entry in: " + album.name);
                                     continue;
@@ -689,7 +689,7 @@ function processPhotos() {
 function finishImageProcess(error, info, manifestEntry) {
     gallery.loaded.imageProcess++;
     if (error) {
-        console.log("Image Error: " + outputPath + " | " + err);
+        console.log("Image Error: " + manifestEntry.path + " | " + err);
         return;
     }
     manifestEntry.updated_at = getRFC2822Timestamp();
@@ -763,7 +763,7 @@ function storeManifestFile(writePath, localPath) {
 }
 
 function htmlSafeString(str) {
-    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/\n/g, "<br>");
 }
 
 function getRFC2822Timestamp() {

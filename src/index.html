@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:3000 https://brain.melonking.net; script-src 'self'" />
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' http://localhost:3000 https://brain.melonking.net; script-src 'self'" />
         <title>Melon's Gallery Maker!</title>
         <link rel="stylesheet" type="text/css" href="styles/fonts/basiic/basiic.css" />
         <link rel="stylesheet" type="text/css" href="styles/ui.css" />
@@ -15,11 +15,18 @@
                 ><h2><span id="version"></span> - <a id="registration">unregistered</a></h2></span
             >
             <p>Welcome HUMAN, this shareware will convert your photo albums/collections into HTML web albums!</p>
+            <span class="melonLink" data-melon-link-format="400x40"></span>
+            <span class="melonLink" data-melon-link-format="352x31"></span>
+            <span class="melonLink" data-melon-link-format="80x80"></span>
+            <span class="melonLink" data-melon-link-format="40x40"></span>
         </header>
         <hr />
         <br />
         <div id="wrapper">
             <div id="left">
+                <span class="melonLink" data-melon-link-format="400x40"></span>
+                <span class="melonLink" data-melon-link-format="320x40"></span>
+                <span class="melonLink" data-melon-link-format="352x31"></span>
                 <h2>Source Folder:</h2>
                 <button id="input" type="button">Pick your Gallery Source!</button><br />
                 <b id="input-feedback">No source selected...</b>
@@ -55,7 +62,7 @@
                 <button id="generate" type="button">Make my gallery u program!</button> <br />
                 <b id="generate-feedback">Click make to make/update your gallery!</b>
                 <hr />
-                <span class="inputRow"><button id="open-output" type="button">Open the save folder!</button> <button id="open-neocities" type="button">Open Neocities Uploader!</button></span>
+                <span class="inputRow"><button id="open-output" type="button">Open the save folder!</button> <button id="open-neocities" type="button">Neocities Uploader!</button> <button id="open-nekoweb" type="button">Nekoweb Uploader!</button></span>
             </div>
             <div id="right">
                 <h3>Users Guide:</h3>
@@ -103,5 +110,6 @@
         </audio>
         <script src="audio-extra.js"></script>
         <script src="index.js"></script>
+        <script src="melonLinks.js"></script>
     </body>
 </html>

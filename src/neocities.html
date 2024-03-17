@@ -2,11 +2,16 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
         <title>Neocities Upload!</title>
         <link rel="stylesheet" type="text/css" href="styles/fonts/basiic/basiic.css" />
         <link rel="stylesheet" type="text/css" href="styles/ui.css" />
+        <style>
+            body {
+                background-color: #f0c693;
+            }
+        </style>
     </head>
     <body>
         <h1>Neocities Upload!</h1>

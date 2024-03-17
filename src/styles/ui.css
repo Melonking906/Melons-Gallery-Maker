@@ -134,10 +134,17 @@ label {
 }
 
 #open-neocities {
-    background-color: rgb(255, 170, 246);
+    background-color: #e8a04a;
 }
 #open-neocities:hover {
-    background-color: rgb(183, 79, 172);
+    background-color: #b47428;
+}
+
+#open-nekoweb {
+    background-color: #dfebab;
+}
+#open-nekoweb:hover {
+    background-color: #c0d7be;
 }
 
 #upload {

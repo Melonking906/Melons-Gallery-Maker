@@ -12,6 +12,7 @@ let galleryFolder = "MelonGallery";
 
 let mainWindow = undefined;
 let neocitiesWindow = undefined;
+let nekowebWindow = undefined;
 let registerWindow = undefined;
 let chnagesWindow = undefined;
 
@@ -43,6 +44,20 @@ const createNeocitiesWindow = () => {
 
     neocitiesWindow.loadFile("src/neocities.html");
     // neocitiesWindow.webContents.openDevTools();
+};
+
+const createNekowebWindow = () => {
+    nekowebWindow = new BrowserWindow({
+        width: 500,
+        height: 530,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+    });
+
+    nekowebWindow.loadFile("src/nekoweb.html");
+    // nekowebWindow.webContents.openDevTools();
 };
 
 const createRegisterWindow = () => {
@@ -203,7 +218,9 @@ app.whenReady().then(() => {
     ipcMain.on("open-output-picker", (event) => {
         dialog
             .showOpenDialog({
-                properties: ["openDirectory"],
+                title: "Select an Output Location",
+                button: "Pick!",
+                properties: ["openDirectory", "createDirectory"],
             })
             .then((result) => {
                 let path = result.filePaths[0];
@@ -272,7 +289,6 @@ app.whenReady().then(() => {
             storagePath: storage.getDataPath(),
             outputPath: outputPath,
         };
-
         createNeocitiesWindow();
     });
 
@@ -293,6 +309,20 @@ app.whenReady().then(() => {
                 neocitiesUpload(event, [], uploadPath, api);
             }
         });
+    });
+
+    // +++ NEKOWEB
+
+    ipcMain.on("open-nekoweb", (event, outputPath) => {
+        dataForNekowebWindow = {
+            storagePath: storage.getDataPath(),
+            outputPath: outputPath,
+        };
+        createNekowebWindow();
+    });
+
+    ipcMain.on("nekoweb-getdata", (event) => {
+        event.sender.send("data-request", dataForNekowebWindow);
     });
 
     // +++ REGISTER

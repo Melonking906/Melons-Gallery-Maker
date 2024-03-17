@@ -31,6 +31,7 @@ index.html.generate_feedback = document.getElementById("generate-feedback");
 
 index.html.open_output = document.getElementById("open-output");
 index.html.open_neocities = document.getElementById("open-neocities");
+index.html.open_nekoweb = document.getElementById("open-nekoweb");
 
 index.html.registration = document.getElementById("registration");
 
@@ -125,6 +126,10 @@ index.html.open_output.addEventListener("click", () => {
 
 index.html.open_neocities.addEventListener("click", () => {
     ipcRenderer.send("open-neocities", index.output);
+});
+
+index.html.open_nekoweb.addEventListener("click", () => {
+    ipcRenderer.send("open-nekoweb", index.output);
 });
 
 index.html.registration.addEventListener("click", () => {
