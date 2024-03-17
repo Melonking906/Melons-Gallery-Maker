@@ -297,12 +297,15 @@ app.whenReady().then(() => {
     });
 
     ipcMain.on("neocities-upload", (event, user, pass, uploadPath) => {
+        console.log("A Neocities upload is trying to start!");
+
         let api = new NeoCities(user, pass);
         let manifestURL = "https://" + user + ".neocities.org" + path.posix.join("/", uploadPath, "manifest.json");
 
         request.get(manifestURL, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 let ncManifest = JSON.parse(body);
+                console.log("Manifest found, updating gallery!");
                 neocitiesUpload(event, ncManifest.images, uploadPath, api);
             } else {
                 console.log("No manifest found, must be a new upload!");
@@ -310,6 +313,64 @@ app.whenReady().then(() => {
             }
         });
     });
+
+    // Uploads the gallery to neocities; takes a list of existing cityFiles to compare and exclude from the upload
+    function neocitiesUpload(event, cityFiles, uploadPath, api) {
+        console.log("Starting Neocities Upload!");
+
+        // Access the local manifest to get files to upload
+        fs.readFile(path.join(dataForNeocitiesWindow.outputPath, "manifest.json"), "utf8", (error, data) => {
+            let localFiles = [];
+            if (error) {
+                console.log("No manifest found at: " + dataForNeocitiesWindow.outputPath);
+                return;
+            } else {
+                data = JSON.parse(data);
+                localFiles = data.images.concat(data.files);
+            }
+
+            // Filter existing neocities files from the local list
+            for (let i = localFiles.length - 1; i >= 0; i--) {
+                let localFile = localFiles[i];
+                cityFiles.forEach(function (cityFile) {
+                    // Filter out neocities upload path so its just a local path
+                    if (cityFile.path == localFile.path) {
+                        // Same file !!!
+                        let cityDate = DateTime.fromRFC2822(cityFile.updated_at);
+                        let localDate = DateTime.fromRFC2822(localFile.updated_at);
+                        if (cityDate >= localDate && cityFile.size == localFile.size) {
+                            // File is the same or newer - do not upload!
+                            localFiles.splice(i, 1);
+                        }
+                    }
+                });
+            }
+
+            // Convert files to NC upload request - lazy I know, but comeoooonn!
+            let uploadFiles = [];
+            localFiles.forEach((localFile) => {
+                uploadFiles.push({
+                    name: path.posix.join(uploadPath, localFile.path),
+                    path: path.join(dataForNeocitiesWindow.outputPath, localFile.path),
+                });
+            });
+
+            // UPLOAD
+            api.upload(uploadFiles, (resp) => {
+                console.log(resp);
+
+                if (resp.result == "error") {
+                    event.sender.send("upload-error", resp.message);
+                    return;
+                }
+
+                if (resp.result == "success") {
+                    event.sender.send("upload-success", uploadFiles.length);
+                    return;
+                }
+            });
+        });
+    }
 
     // +++ NEKOWEB
 
@@ -323,6 +384,23 @@ app.whenReady().then(() => {
 
     ipcMain.on("nekoweb-getdata", (event) => {
         event.sender.send("data-request", dataForNekowebWindow);
+    });
+
+    ipcMain.on("nekoweb-upload", (event, user, pass, uploadPath) => {
+        console.log("A Nekoweb upload is trying to start!");
+
+        let manifestURL = "https://" + user + ".nekoweb.org" + path.posix.join("/", uploadPath, "manifest.json");
+
+        request.get(manifestURL, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                let ncManifest = JSON.parse(body);
+                console.log("Manifest found, updating gallery!");
+                //neocitiesUpload(event, ncManifest.images, uploadPath, api);
+            } else {
+                console.log("No manifest found, must be a new upload!");
+                //neocitiesUpload(event, [], uploadPath, api);
+            }
+        });
     });
 
     // +++ REGISTER
@@ -341,64 +419,6 @@ app.whenReady().then(() => {
         event.sender.send("data-request", storage.getDataPath());
     });
 });
-
-// Uploads the gallery to neocities; takes a list of existing cityFiles to compare and exclude from the upload
-function neocitiesUpload(event, cityFiles, uploadPath, api) {
-    console.log("Starting Neocities Upload");
-
-    // Access the local manifest to get files to upload
-    fs.readFile(path.join(dataForNeocitiesWindow.outputPath, "manifest.json"), "utf8", (error, data) => {
-        let localFiles = [];
-        if (error) {
-            console.log("No manifest found at: " + dataForNeocitiesWindow.outputPath);
-            return;
-        } else {
-            data = JSON.parse(data);
-            localFiles = data.images.concat(data.files);
-        }
-
-        // Filter existing neocities files from the local list
-        for (let i = localFiles.length - 1; i >= 0; i--) {
-            let localFile = localFiles[i];
-            cityFiles.forEach(function (cityFile) {
-                // Filter out neocities upload path so its just a local path
-                if (cityFile.path == localFile.path) {
-                    // Same file !!!
-                    let cityDate = DateTime.fromRFC2822(cityFile.updated_at);
-                    let localDate = DateTime.fromRFC2822(localFile.updated_at);
-                    if (cityDate >= localDate && cityFile.size == localFile.size) {
-                        // File is the same or newer - do not upload!
-                        localFiles.splice(i, 1);
-                    }
-                }
-            });
-        }
-
-        // Convert files to NC upload request - lazy I know, but comeoooonn!
-        let uploadFiles = [];
-        localFiles.forEach((localFile) => {
-            uploadFiles.push({
-                name: path.posix.join(uploadPath, localFile.path),
-                path: path.join(dataForNeocitiesWindow.outputPath, localFile.path),
-            });
-        });
-
-        // UPLOAD
-        api.upload(uploadFiles, (resp) => {
-            console.log(resp);
-
-            if (resp.result == "error") {
-                event.sender.send("upload-error", resp.message);
-                return;
-            }
-
-            if (resp.result == "success") {
-                event.sender.send("upload-success", uploadFiles.length);
-                return;
-            }
-        });
-    });
-}
 
 // ++++ Functions ++++
 

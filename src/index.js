@@ -26,6 +26,8 @@ index.html.show_filenames = document.getElementById("show_filenames");
 index.html.use_javascript = document.getElementById("use_javascript");
 index.html.use_minify = document.getElementById("use_minify");
 
+index.html.log = document.getElementById("log");
+
 index.html.generate = document.getElementById("generate");
 index.html.generate_feedback = document.getElementById("generate-feedback");
 

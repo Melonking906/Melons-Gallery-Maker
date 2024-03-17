@@ -6,7 +6,7 @@ let nc = {};
 nc.html = {};
 nc.html.selected_output = document.getElementById("selected-output");
 nc.html.user = document.getElementById("user");
-nc.html.pass = document.getElementById("pass");
+nc.html.key = document.getElementById("key");
 nc.html.upload_path = document.getElementById("upload-path");
 nc.html.upload = document.getElementById("upload");
 nc.html.upload_feedback = document.getElementById("upload-feedback");
@@ -14,7 +14,7 @@ nc.html.upload_feedback = document.getElementById("upload-feedback");
 nc.outputPath = "";
 nc.storagePath = "";
 
-ipcRenderer.send("neocities-getdata");
+ipcRenderer.send("nekoweb-getdata");
 
 ipcRenderer.on("data-request", (event, data) => {
     nc.outputPath = data.outputPath;
@@ -28,14 +28,19 @@ function start() {
 
     nc.html.selected_output.innerHTML = "Uploading Gallery from " + nc.outputPath;
 
-    storage.has("neocities_user", function (error, hasKey) {
+    storage.has("nekoweb_user", function (error, hasKey) {
         if (hasKey) {
-            nc.html.user.value = storage.getSync("neocities_user");
+            nc.html.user.value = storage.getSync("nekoweb_user");
         }
     });
-    storage.has("neocities_upload_path", function (error, hasKey) {
+    storage.has("nekoweb_key", function (error, hasKey) {
         if (hasKey) {
-            nc.html.upload_path.value = storage.getSync("neocities_upload_path");
+            nc.html.key.value = storage.getSync("nekoweb_key");
+        }
+    });
+    storage.has("nekoweb_upload_path", function (error, hasKey) {
+        if (hasKey) {
+            nc.html.upload_path.value = storage.getSync("nekoweb_upload_path");
         }
     });
 }
@@ -52,31 +57,31 @@ function setInputs(disabled) {
 }
 
 nc.html.upload.addEventListener("click", () => {
-    console.log("Neocities Upload Requested!");
+    console.log("Nekoweb Upload Requested!");
 
     setInputs(true);
 
     let user = nc.html.user.value;
-    let pass = nc.html.pass.value;
+    let key = nc.html.key.value;
     let uploadPath = nc.html.upload_path.value;
 
-    if (user == "" || pass == "" || uploadPath == "") {
+    if (user == "" || key == "" || uploadPath == "") {
         nc.html.upload_feedback.innerHTML = "Oops, looks like you are missing some info!";
         audio.error.play();
         setInputs(false);
         return;
     }
 
-    storage.set("neocities_user", user);
-    storage.set("neocities_upload_path", uploadPath);
+    storage.set("nekoweb_user", user);
+    storage.set("nekoweb_upload_path", uploadPath);
 
-    ipcRenderer.send("neocities-upload", user, pass, uploadPath);
+    ipcRenderer.send("nekoweb-upload", user, pass, uploadPath);
     nc.html.upload_feedback.innerHTML = "<span>Your gallery is UPLOADING!!? (This may take some time)</span>";
     audio.loading.play();
 });
 
 ipcRenderer.on("upload-error", (event, message) => {
-    nc.html.upload_feedback.innerHTML = "<span class='alert'>ALERT - There was an error, check your name and password!</span>";
+    nc.html.upload_feedback.innerHTML = "<span class='alert'>ALERT - There was an error, check your name and api key!</span>";
     audio.error.play();
     setInputs(false);
 });
