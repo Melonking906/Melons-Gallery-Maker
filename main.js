@@ -3,7 +3,6 @@ const storage = require("electron-json-storage");
 const fs = require("fs-extra");
 const path = require("path");
 const { DateTime } = require("luxon");
-const NeoCities = require("neocities-extended");
 const request = require("request");
 
 const melonMaker = require("./maker.js");
@@ -299,19 +298,25 @@ app.whenReady().then(() => {
     ipcMain.on("neocities-upload", (event, user, pass, uploadPath) => {
         console.log("A Neocities upload is trying to start!");
 
-        let api = new NeoCities(user, pass);
-        let manifestURL = "https://" + user + ".neocities.org" + path.posix.join("/", uploadPath, "manifest.json");
+        getNeocitiesClient(user, pass)
+            .then((api) => {
+                let manifestURL = "https://" + user + ".neocities.org" + path.posix.join("/", uploadPath, "manifest.json");
 
-        request.get(manifestURL, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                let ncManifest = JSON.parse(body);
-                console.log("Manifest found, updating gallery!");
-                neocitiesUpload(event, ncManifest.images, uploadPath, api);
-            } else {
-                console.log("No manifest found, must be a new upload!");
-                neocitiesUpload(event, [], uploadPath, api);
-            }
-        });
+                request.get(manifestURL, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        let ncManifest = JSON.parse(body);
+                        console.log("Manifest found, updating gallery!");
+                        neocitiesUpload(event, ncManifest.images, uploadPath, api);
+                    } else {
+                        console.log("No manifest found, must be a new upload!");
+                        neocitiesUpload(event, [], uploadPath, api);
+                    }
+                });
+            })
+            .catch((err) => {
+                console.log("Neocities authentication failed: ", err);
+                event.sender.send("upload-error", "Could not authenticate, check your name and password!");
+            });
     });
 
     // Uploads the gallery to neocities; takes a list of existing cityFiles to compare and exclude from the upload
@@ -356,19 +361,23 @@ app.whenReady().then(() => {
             });
 
             // UPLOAD
-            api.upload(uploadFiles, (resp) => {
-                console.log(resp);
+            api.upload(uploadFiles)
+                .then((resp) => {
+                    console.log(resp);
 
-                if (resp.result == "error") {
-                    event.sender.send("upload-error", resp.message);
-                    return;
-                }
+                    if (resp.errors.length > 0) {
+                        let firstError = resp.errors[0];
+                        let message = (firstError.cause && firstError.cause.body && firstError.cause.body.message) || firstError.message;
+                        event.sender.send("upload-error", message);
+                        return;
+                    }
 
-                if (resp.result == "success") {
                     event.sender.send("upload-success", uploadFiles.length);
-                    return;
-                }
-            });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    event.sender.send("upload-error", err.message);
+                });
         });
     }
 
@@ -421,6 +430,12 @@ app.whenReady().then(() => {
 });
 
 // ++++ Functions ++++
+
+async function getNeocitiesClient(user, pass) {
+    const { NeocitiesAPIClient } = await import("async-neocities");
+    const { api_key } = await NeocitiesAPIClient.getKey({ siteName: user, ownerPassword: pass });
+    return new NeocitiesAPIClient(api_key);
+}
 
 function inputPathUpdate(inputPath) {
     fs.readdir(inputPath, function (err, fileNames) {
