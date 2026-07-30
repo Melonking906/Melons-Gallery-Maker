@@ -64,6 +64,7 @@ function resetMemory() {
     gallery.loading = {};
     gallery.loading.albums = 0;
     gallery.loading.albumLoadStarted = false;
+    gallery.loading.imageProcess = 0;
     gallery.loading.thumbnailProcess = 0;
     gallery.loading.fileProcess = 0;
     gallery.loading.templateErrors = [];
