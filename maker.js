@@ -61,8 +61,10 @@ function resetMemory() {
     // General internal metrics and storage for processed files
     gallery.loading = {};
     gallery.loading.albums = 0;
+    gallery.loading.albumLoadStarted = false;
     gallery.loading.thumbnailProcess = 0;
     gallery.loading.fileProcess = 0;
+    gallery.loading.templateErrors = [];
 
     gallery.loaded = {};
     gallery.loaded.albums = 0;
@@ -70,6 +72,7 @@ function resetMemory() {
     gallery.loaded.imageProcess = 0;
     gallery.loaded.thumbnailProcess = 0;
     gallery.loaded.fileProcess = 0;
+    gallery.loaded.manifestFilesStored = 0;
 
     gallery.templates = {}; // Processed template objects and their file data
     gallery.albums = []; // Processed list of album objects
@@ -118,6 +121,12 @@ async function make(makeData, makeCallback) {
     loadTemplates();
     await loadingWaitTemplates();
 
+    if (gallery.loading.templateErrors.length > 0) {
+        console.log("Templates failed to load: " + gallery.loading.templateErrors.join(", "));
+        makeCallback("Error - Could not load templates!");
+        return;
+    }
+
     // Sort albums by name.
     gallery.albums = gallery.albums.sort((a, b) => {
         let textA = a.name.toUpperCase();
@@ -157,8 +166,12 @@ function loadManifest() {
         if (err) {
             return console.log("Error loading manifest or no file found!: " + err);
         }
-        gallery.manifest = JSON.parse(data);
-        gallery.manifest.files = []; // Files are always regenerated
+        try {
+            gallery.manifest = JSON.parse(data);
+            gallery.manifest.files = []; // Files are always regenerated
+        } catch (parseErr) {
+            console.log("Manifest file was messed up: " + parseErr);
+        }
     });
 }
 
@@ -172,7 +185,10 @@ function loadTemplates() {
         // Import template files
         fs.readFile(filepath, "utf8", (err, data) => {
             if (err) {
-                return console.log("File Load Error: " + err);
+                console.log("File Load Error: " + err);
+                gallery.loading.templateErrors.push(filepath);
+                gallery.loaded.templates++;
+                return;
             }
 
             let baseName = path.basename(filepath);
@@ -209,11 +225,13 @@ function loadTemplates() {
 function loadAlbums() {
     fs.readdir(gallery.settings.photosDir, (err, albumNames) => {
         if (err) {
-            return console.log("Unable to scan directory: " + err);
+            gallery.loading.albumLoadStarted = true;
+            return console.log("Unable to read input folder: " + err);
         }
 
         albumNames = albumNames.filter((item) => !/(^|\/)\.[^\/\.]/g.test(item)); // Remove hidden files
         gallery.loading.albums = albumNames.length;
+        gallery.loading.albumLoadStarted = true;
 
         albumNames.forEach(function (albumName) {
             let folderPath = path.join(gallery.settings.photosDir, albumName);
@@ -232,7 +250,9 @@ function loadAlbums() {
             // Get files in the albums folder
             fs.readdir(folderPath, (err, files) => {
                 if (err) {
-                    return console.log("Unable to scan directory: " + err);
+                    console.log("Unable to read input folder, skipped: " + err);
+                    gallery.loaded.albums++;
+                    return;
                 }
                 files = files.filter((item) => !/(^|\/)\.[^\/\.]/g.test(item)); //Remove hidden files
 
@@ -689,7 +709,7 @@ function processPhotos() {
 function finishImageProcess(error, info, manifestEntry) {
     gallery.loaded.imageProcess++;
     if (error) {
-        console.log("Image Error: " + manifestEntry.path + " | " + err);
+        console.log("Image Error: " + manifestEntry.path + " | " + error);
         return;
     }
     manifestEntry.updated_at = getRFC2822Timestamp();
@@ -759,6 +779,7 @@ function storeManifestFile(writePath, localPath) {
             };
             gallery.manifest.files.push(manifestEntry);
         }
+        gallery.loaded.manifestFilesStored++;
     });
 }
 
@@ -796,34 +817,52 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function loadingWaitFileProcessing() {
-    while (gallery.manifest.files.length < gallery.loaded.fileProcess || gallery.manifest.files.length == 0) {
+async function loadingWaitTimeout(loadingCallback, label, progressCallback, maxLoadingTime = 2 * 60 * 1000) {
+    let lastProgress = progressCallback();
+    let loadingFor = 0;
+
+    while (!loadingCallback()) {
         await sleep(1000);
+
+        let currentProgress = progressCallback();
+        if (currentProgress !== lastProgress) {
+            lastProgress = currentProgress;
+            loadingFor = 0;
+            continue;
+        }
+
+        loadingFor += 1000;
+        if (loadingFor >= maxLoadingTime) {
+            console.log("SKIP ALERT: " + label + " is stuck (" + Math.round(maxLoadingTime / 1000) + "s) skipping!");
+            return;
+        }
     }
-    console.log("Files Processed: " + gallery.manifest.files.length);
+}
+
+async function loadingWaitFileProcessing() {
+    await loadingWaitTimeout(() => gallery.loaded.manifestFilesStored >= gallery.loaded.fileProcess, "file processing", () => gallery.loaded.manifestFilesStored);
+    console.log("Files Processed: " + gallery.loaded.manifestFilesStored + "/" + gallery.loaded.fileProcess);
     return;
 }
 
 async function loadingWaitImageProcessing() {
-    while (gallery.loading.imageProcess != gallery.loaded.imageProcess && gallery.loading.thumbnailProcess != gallery.loaded.thumbnailProcess) {
-        await sleep(1000);
-    }
+    await loadingWaitTimeout(
+        () => gallery.loading.imageProcess == gallery.loaded.imageProcess && gallery.loading.thumbnailProcess == gallery.loaded.thumbnailProcess,
+        "image processing",
+        () => gallery.loaded.imageProcess + gallery.loaded.thumbnailProcess
+    );
     console.log("Images Processed: " + gallery.loaded.imageProcess + " / Thumbnails: " + gallery.loaded.thumbnailProcess);
     return;
 }
 
 async function loadingWaitTemplates() {
-    while (gallery.loaded.templates < gallery.templatePaths.length) {
-        await sleep(1000);
-    }
+    await loadingWaitTimeout(() => gallery.loaded.templates >= gallery.templatePaths.length, "template loading", () => gallery.loaded.templates);
     console.log("Templates Loaded: " + gallery.loaded.templates + "/" + gallery.templatePaths.length);
     return;
 }
 
 async function loadingWaitAlbums() {
-    while (gallery.loading.albums == 0 || gallery.loading.albums != gallery.loaded.albums) {
-        await sleep(1000);
-    }
+    await loadingWaitTimeout(() => gallery.loading.albumLoadStarted && gallery.loading.albums == gallery.loaded.albums, "album loading", () => gallery.loaded.albums);
     console.log("Albums Loaded: " + gallery.loaded.albums + "/" + gallery.loading.albums);
     return;
 }

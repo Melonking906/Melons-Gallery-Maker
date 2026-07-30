@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog, shell, Menu } = require("electron")
 const storage = require("electron-json-storage");
 const fs = require("fs-extra");
 const path = require("path");
+const util = require("util");
 const { DateTime } = require("luxon");
 const request = require("request");
 
@@ -85,6 +86,15 @@ const createChangesWindow = () => {
 
     chnagesWindow.loadFile("src/changes.html");
     // chnagesWindow.webContents.openDevTools();
+};
+
+// Sends console log messages to the #log textarea on the index
+const originalConsoleLog = console.log.bind(console);
+console.log = (...args) => {
+    originalConsoleLog(...args);
+    if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send("log-message", util.format(...args));
+    }
 };
 
 app.whenReady().then(() => {
@@ -302,13 +312,20 @@ app.whenReady().then(() => {
             .then((api) => {
                 let manifestURL = "https://" + user + ".neocities.org" + path.posix.join("/", uploadPath, "manifest.json");
 
-                request.get(manifestURL, function (error, response, body) {
+                request.get({ url: manifestURL, timeout: 15000 }, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
-                        let ncManifest = JSON.parse(body);
+                        let ncManifest;
+                        try {
+                            ncManifest = JSON.parse(body);
+                        } catch (parseErr) {
+                            console.log("Remote manifest was not valid JSON, treating as a new upload: " + parseErr);
+                            neocitiesUpload(event, [], uploadPath, api);
+                            return;
+                        }
                         console.log("Manifest found, updating gallery!");
                         neocitiesUpload(event, ncManifest.images, uploadPath, api);
                     } else {
-                        console.log("No manifest found, must be a new upload!");
+                        console.log("No manifest found (or request failed: " + error + "), must be a new upload!");
                         neocitiesUpload(event, [], uploadPath, api);
                     }
                 });
@@ -327,10 +344,17 @@ app.whenReady().then(() => {
         fs.readFile(path.join(dataForNeocitiesWindow.outputPath, "manifest.json"), "utf8", (error, data) => {
             let localFiles = [];
             if (error) {
-                console.log("No manifest found at: " + dataForNeocitiesWindow.outputPath);
+                console.log("Manifest not found at: " + dataForNeocitiesWindow.outputPath);
+                event.sender.send("upload-error", "No manifest found, generate the gallery before uploading!");
                 return;
             } else {
-                data = JSON.parse(data);
+                try {
+                    data = JSON.parse(data);
+                } catch (parseErr) {
+                    console.log("Manifest was not valid: " + parseErr);
+                    event.sender.send("upload-error", "The manifest is messed up, try regenerating the gallery!");
+                    return;
+                }
                 localFiles = data.images.concat(data.files);
             }
 
@@ -400,13 +424,17 @@ app.whenReady().then(() => {
 
         let manifestURL = "https://" + user + ".nekoweb.org" + path.posix.join("/", uploadPath, "manifest.json");
 
-        request.get(manifestURL, function (error, response, body) {
+        request.get({ url: manifestURL, timeout: 15000 }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                let ncManifest = JSON.parse(body);
-                console.log("Manifest found, updating gallery!");
-                //neocitiesUpload(event, ncManifest.images, uploadPath, api);
+                try {
+                    let ncManifest = JSON.parse(body);
+                    console.log("Manifest found, updating gallery!");
+                    //neocitiesUpload(event, ncManifest.images, uploadPath, api);
+                } catch (parseErr) {
+                    console.log("Remote manifest was not valid: " + parseErr);
+                }
             } else {
-                console.log("No manifest found, must be a new upload!");
+                console.log("Manifest not found (" + error + "), must be a new upload!");
                 //neocitiesUpload(event, [], uploadPath, api);
             }
         });

@@ -204,3 +204,8 @@ ipcRenderer.on("make-finished", (event, feedback) => {
 ipcRenderer.on("update-registration", (event) => {
     updateRegistration();
 });
+
+ipcRenderer.on("log-message", (event, message) => {
+    index.html.log.value += message + "\n";
+    index.html.log.scrollTop = index.html.log.scrollHeight;
+});

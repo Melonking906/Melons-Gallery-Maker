@@ -118,7 +118,8 @@ label {
 #input,
 #output,
 #generate,
-#upload {
+#upload,
+#log {
     width: 100%;
     margin: 5px 0px;
 }
@@ -152,6 +153,10 @@ label {
 }
 #upload:hover {
     background-color: rgb(255, 172, 100);
+}
+
+#log {
+    height: 50px;
 }
 
 .inputRow {
