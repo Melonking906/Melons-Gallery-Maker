@@ -22,6 +22,7 @@ gallery.settings.photoSize = 2560; // Max width in px - Will be overwritten by s
 gallery.settings.compressionLevel = 85; // Max width in px - Will be overwritten by settings file
 gallery.settings.photosPerAlbumPage = 100; // How many images go on each page - Will be overwritten by settings file
 gallery.settings.showImageTitles = true; // Should image titles be displayed? - Will be overwritten by settings file
+gallery.settings.sortMode = "alphabetical"; // How images are ordered within an album - Will be overwritten by settings file
 gallery.settings.doHTMLCompress = true; // Minify the exported HTML files
 gallery.settings.useJavascript = true; // Minify the exported HTML files
 
@@ -43,6 +44,7 @@ gallery.settings.imagesDir = "images"; // /albums/images - Resized web images
 gallery.supportedFileTypes = [".png", ".jpeg", ".jpg", ".gif", ".tiff", ".tif", ".webp"];
 gallery.toJPEGFormats = [".jp2", ".tiff", ".tif"];
 gallery.singleCopyFormats = [".gif"];
+gallery.thumbFormats = [".jpg", ".jpeg", ".png", ".webp"];
 // libvips is needed for jp2
 
 // Template pages are imported here
@@ -153,8 +155,9 @@ function loadSettings(file) {
     gallery.settings.thumbSize = file.thumbnail_size === "undefined" ? gallery.settings.thumbSize : file.thumbnail_size;
     gallery.settings.photoSize = file.image_size === "undefined" ? gallery.settings.photoSize : file.image_size;
     gallery.settings.compressionLevel = file.image_compression === "undefined" ? gallery.settings.compressionLevel : file.image_compression;
-    gallery.settings.photosPerAlbumPage = file.images_per_page === "undefined" ? gallery.settings.tiphotosPerAlbumPagetle : file.images_per_page;
+    gallery.settings.photosPerAlbumPage = file.images_per_page === "undefined" ? gallery.settings.photosPerAlbumPage : file.images_per_page;
     gallery.settings.showImageTitles = file.show_filenames === "undefined" ? gallery.settings.showImageTitles : file.show_filenames;
+    gallery.settings.sortMode = file.sort_mode === "undefined" || file.sort_mode == undefined ? gallery.settings.sortMode : file.sort_mode;
     gallery.settings.doHTMLCompress = file.use_minify === "undefined" ? gallery.settings.doHTMLCompress : file.use_minify;
     gallery.settings.useJavascript = file.use_javascript === "undefined" ? gallery.settings.useJavascript : file.use_javascript;
 }
@@ -269,6 +272,7 @@ function loadAlbums() {
                 album.txt = "";
                 album.mp3 = undefined;
                 album.fileInfos = [];
+                album.fileDates = [];
                 album.files = [];
 
                 // Generate the file structure for the albumName
@@ -331,6 +335,14 @@ function loadAlbums() {
                     // Add supported image!
                     album.files.push(file);
 
+                    // Get the files date for sorting
+                    try {
+                        album.fileDates[file] = fs.statSync(path.join(album.sourcePath, file)).mtime;
+                    } catch (error) {
+                        console.log("Could not read date for: " + file + " | " + error);
+                        album.fileDates[file] = new Date(0);
+                    }
+
                     // Log it in the storage index as a hash
                     let sourceHash = crypto
                         .createHash("sha1")
@@ -340,15 +352,15 @@ function loadAlbums() {
                 });
 
                 // Skip folders that have no images in them that can be included
-                if (album.files < 1) {
+                if (album.files.length < 1) {
                     console.log("Album had no images, skipping: " + albumName);
                     fs.rmSync(album.outputPath, { recursive: true, force: true });
                     gallery.loaded.albums++;
                     return;
                 }
 
-                //Sort the files to ensure they come out the same after regens.
-                album.files.sort();
+                // Sort album files
+                sortAlbumFiles(album);
 
                 gallery.albums.push(album);
                 gallery.loaded.albums++;
@@ -452,7 +464,7 @@ function renderAlbums() {
                 }
 
                 // Thumbnail address
-                let thumbAddress = path.posix.join(gallery.settings.thumbnailsDir, "thumb_" + baseName + ".jpg");
+                let thumbAddress = path.posix.join(gallery.settings.thumbnailsDir, "thumb_" + baseName + getThumbExtension(fileType));
                 if (gallery.singleCopyFormats.includes(fileType)) {
                     thumbAddress = path.posix.join(gallery.settings.imagesDir, photo);
                 }
@@ -567,6 +579,8 @@ function processPhotos() {
     gallery.albums.forEach((album) => {
         // For Each Photo
         album.files.forEach((photo) => {
+            console.log("Processing image " + album.name + "/" + photo);
+
             let sourcePath = path.join(album.sourcePath, photo);
 
             let sourceHash = crypto
@@ -672,7 +686,7 @@ function processPhotos() {
                 gallery.loaded.thumbnailProcess++;
             } else {
                 let baseName = photo.replace(fileType, "");
-                let thumbName = "thumb_" + baseName + ".jpg";
+                let thumbName = "thumb_" + baseName + getThumbExtension(fileType);
                 let outputThumbPath = path.join(album.outputPath, gallery.settings.thumbnailsDir, thumbName);
 
                 let manifestEntryThumb = {
@@ -685,21 +699,18 @@ function processPhotos() {
                 if (!shouldThumbnailBeProcessed(manifestEntryThumb, manifestList)) {
                     gallery.loaded.thumbnailProcess++;
                 } else {
-                    sharp(sourcePath)
-                        .rotate()
-                        .resize(resizeThumbOpt)
-                        .jpeg({ quality: 70, progressive: true })
-                        .toFile(outputThumbPath, (err, info) => {
-                            gallery.loaded.thumbnailProcess++;
-                            if (err) {
-                                console.log("Thumb-error: " + outputPath + " | " + err);
-                                return;
-                            }
-                            manifestEntryThumb.updated_at = getRFC2822Timestamp();
-                            manifestEntryThumb.size = info.size;
+                    let thumbMaker = applyThumbFormat(sharp(sourcePath).rotate().resize(resizeThumbOpt), fileType);
+                    thumbMaker.toFile(outputThumbPath, (err, info) => {
+                        gallery.loaded.thumbnailProcess++;
+                        if (err) {
+                            console.log("Thumb-error: " + outputPath + " | " + err);
+                            return;
+                        }
+                        manifestEntryThumb.updated_at = getRFC2822Timestamp();
+                        manifestEntryThumb.size = info.size;
 
-                            updateOrAddToManifest(manifestEntryThumb);
-                        });
+                        updateOrAddToManifest(manifestEntryThumb);
+                    });
                 }
             }
         });
@@ -766,6 +777,45 @@ function shouldThumbnailBeProcessed(thumbnailManifestEntry, manifestList) {
 }
 
 // **** Helper Functions ****
+
+function getThumbExtension(fileType) {
+    return gallery.thumbFormats.includes(fileType) ? fileType : ".jpg";
+}
+
+function applyThumbFormat(maker, fileType) {
+    switch (getThumbExtension(fileType)) {
+        case ".png":
+            return maker.png({ quality: 85, progressive: true });
+        case ".webp":
+            return maker.webp({ quality: 85 });
+        default:
+            return maker.jpeg({ quality: 85, progressive: true });
+    }
+}
+
+function sortAlbumFiles(album) {
+    switch (gallery.settings.sortMode) {
+        case "reverse_alphabetical":
+            album.files.sort().reverse();
+            break;
+        case "random":
+            for (let i = album.files.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [album.files[i], album.files[j]] = [album.files[j], album.files[i]];
+            }
+            break;
+        case "newest_first":
+            album.files.sort((a, b) => album.fileDates[b] - album.fileDates[a]);
+            break;
+        case "oldest_first":
+            album.files.sort((a, b) => album.fileDates[a] - album.fileDates[b]);
+            break;
+        case "alphabetical":
+        default:
+            album.files.sort();
+            break;
+    }
+}
 
 function storeManifestFile(writePath, localPath) {
     fs.stat(writePath, (err, stats) => {

@@ -74,7 +74,8 @@ button:hover {
 }
 
 input,
-textarea {
+textarea,
+select {
     accent-color: rgba(252, 90, 4, 1);
     resize: vertical;
 }
@@ -113,6 +114,12 @@ label {
 #right img {
     max-width: 100%;
     image-rendering: unset;
+}
+
+#right .melonLink {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
 }
 
 #input,
@@ -166,6 +173,7 @@ label {
 
 .inputRow input,
 .inputRow textarea,
+.inputRow select,
 .inputRow button {
     flex: 1;
     margin-right: 5px;

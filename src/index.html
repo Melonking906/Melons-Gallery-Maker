@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:3000 https://brain.melonking.net; script-src 'self'" />
-        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' http://localhost:3000 https://brain.melonking.net; script-src 'self'" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:3000 https://brain.melonking.net; script-src 'self'; img-src 'self' blob: https://brain.melonking.net" />
+        <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' http://localhost:3000 https://brain.melonking.net; script-src 'self'; img-src 'self' blob: https://brain.melonking.net" />
         <title>Melon's Gallery Maker!</title>
         <link rel="stylesheet" type="text/css" href="styles/fonts/basiic/basiic.css" />
         <link rel="stylesheet" type="text/css" href="styles/ui.css" />
@@ -15,18 +15,11 @@
                 ><h2><span id="version"></span> - <a id="registration">unregistered</a></h2></span
             >
             <p>Welcome HUMAN, this shareware will convert your photo albums/collections into HTML web albums!</p>
-            <span class="melonLink" data-melon-link-format="400x40"></span>
-            <span class="melonLink" data-melon-link-format="352x31"></span>
-            <span class="melonLink" data-melon-link-format="80x80"></span>
-            <span class="melonLink" data-melon-link-format="40x40"></span>
         </header>
         <hr />
         <br />
         <div id="wrapper">
             <div id="left">
-                <span class="melonLink" data-melon-link-format="400x40"></span>
-                <span class="melonLink" data-melon-link-format="320x40"></span>
-                <span class="melonLink" data-melon-link-format="352x31"></span>
                 <h2>Source Folder:</h2>
                 <button id="input" type="button">Pick your Gallery Source!</button><br />
                 <b id="input-feedback">No source selected...</b>
@@ -54,6 +47,17 @@
                 <span class="inputRow"><label>Photos Per Page:</label> <input type="number" id="images_per_page" min="1" max="250" value="100" maxlength="3" /></span>
                 <br />
                 <span class="inputRow inputBG"><label>Show File Names:</label> <input type="checkbox" id="show_filenames" checked /></span> <br />
+                <span class="inputRow inputBG">
+                    <label>Sort Mode:</label>
+                    <select id="sort_mode">
+                        <option value="alphabetical">Alphabetical</option>
+                        <option value="reverse_alphabetical">Reverse Alphabetical</option>
+                        <option value="random">Random</option>
+                        <option value="newest_first">Newest First</option>
+                        <option value="oldest_first">Oldest First</option>
+                    </select>
+                </span>
+                <br />
                 <h2>Output Folder:</h2>
                 <button id="output" type="button">Pick a folder to save to!</button><br />
                 <b id="output-feedback">No output folder selected...</b>
@@ -62,12 +66,13 @@
                 <button id="generate" type="button">Make my gallery u program!</button> <br />
                 <b id="generate-feedback">Click make to make/update your gallery!</b>
                 <hr />
-                <span class="inputRow"><button id="open-output" type="button">Open the save folder!</button> <button id="open-neocities" type="button">Neocities Uploader!</button> <button id="open-nekoweb" type="button">Nekoweb Uploader!</button></span>
+                <span class="inputRow"><button id="open-output" type="button">Open the save folder!</button> <button id="open-neocities" type="button">Neocities Uploader!</button> <!-- <button id="open-nekoweb" type="button">Nekoweb Uploader!</button> --></span>
                 <br />
                 <h2>Log:</h2>
                 <span class="inputRow"><textarea id="log" readonly></textarea></span>
             </div>
             <div id="right">
+                <span class="melonLink" data-melon-link-format="400x40"></span>
                 <h3>Users Guide:</h3>
                 <p>To your left you will notice the SOURCE picker! Your source folder can be any folder that contains one or more sub-folders of images. Each sub-folder will be converted into a photo album in your gallery!</p>
                 <img src="images/sample.png" alt="Folder Example" />

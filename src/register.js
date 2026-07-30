@@ -48,7 +48,7 @@ function start() {
         if (hasKey) {
             setInputs(true);
             rg.html.name.value = storage.getSync("reg_name");
-            rg.html.feedback.innerHTML = "Thank you for registering " + name + " !!!";
+            rg.html.feedback.innerHTML = "Thank you for registering " + storage.getSync("reg_name") + " !!!";
         }
     });
 }

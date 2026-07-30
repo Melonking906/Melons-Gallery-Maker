@@ -23,6 +23,7 @@ index.html.image_compression = document.getElementById("image_compression");
 index.html.thumbnail_size = document.getElementById("thumbnail_size");
 index.html.images_per_page = document.getElementById("images_per_page");
 index.html.show_filenames = document.getElementById("show_filenames");
+index.html.sort_mode = document.getElementById("sort_mode");
 index.html.use_javascript = document.getElementById("use_javascript");
 index.html.use_minify = document.getElementById("use_minify");
 
@@ -63,6 +64,7 @@ function makeData() {
     makeData.settings.thumbnail_size = Math.floor(index.html.thumbnail_size.value);
     makeData.settings.images_per_page = Math.floor(index.html.images_per_page.value);
     makeData.settings.show_filenames = index.html.show_filenames.checked;
+    makeData.settings.sort_mode = index.html.sort_mode.value;
     makeData.settings.use_javascript = index.html.use_javascript.checked;
     makeData.settings.use_minify = index.html.use_minify.checked;
 
@@ -130,9 +132,9 @@ index.html.open_neocities.addEventListener("click", () => {
     ipcRenderer.send("open-neocities", index.output);
 });
 
-index.html.open_nekoweb.addEventListener("click", () => {
-    ipcRenderer.send("open-nekoweb", index.output);
-});
+// index.html.open_nekoweb.addEventListener("click", () => {
+//     ipcRenderer.send("open-nekoweb", index.output);
+// });
 
 index.html.registration.addEventListener("click", () => {
     ipcRenderer.send("open-register");
@@ -167,6 +169,7 @@ ipcRenderer.on("new-settings", (event, newSettings) => {
     index.html.thumbnail_size.value = newSettings.thumbnail_size;
     index.html.images_per_page.value = newSettings.images_per_page;
     index.html.show_filenames.checked = newSettings.show_filenames;
+    index.html.sort_mode.value = newSettings.sort_mode || "alphabetical";
     index.html.use_minify.checked = newSettings.use_minify;
     index.html.use_javascript.checked = newSettings.use_javascript;
 });

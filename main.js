@@ -469,7 +469,7 @@ function inputPathUpdate(inputPath) {
     fs.readdir(inputPath, function (err, fileNames) {
         if (err) {
             mainWindow.webContents.send("input-selected-error");
-            return console.log("Unable to scan directory: " + err);
+            return console.log("ALERT Unable to find the input folder: " + err);
         }
 
         // Check to see if there is a gallery folder
@@ -533,9 +533,10 @@ function loadSettings(sourcePath) {
             return;
         }
 
-        if (JSON.parse(data).version != app.getVersion()) {
-            createChangesWindow();
-        }
+        // Update alert disabled for v0.0.3
+        // if (JSON.parse(data).version != app.getVersion()) {
+        //     createChangesWindow();
+        // }
 
         mainWindow.webContents.send("new-settings", data);
     });
