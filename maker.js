@@ -238,7 +238,7 @@ function loadAlbums() {
         gallery.loading.albumLoadStarted = true;
 
         albumNames.forEach(function (albumName) {
-            let folderPath = path.join(gallery.settings.photosDir, albumName);
+            let folderPath = path.join(gallery.settings.photosDir, path.basename(albumName));
 
             // Make sure we are loading a folder and not a file!
             if (fs.statSync(folderPath).isFile()) {
@@ -267,7 +267,7 @@ function loadAlbums() {
                     .replace(/[^a-z0-9]/gi, "-")
                     .replace(/-+/g, "-") // Removes repeating ---s
                     .toLowerCase();
-                album.sourcePath = path.join(gallery.settings.photosDir, album.name);
+                album.sourcePath = path.join(gallery.settings.photosDir, path.basename(album.name));
                 album.outputPath = path.join(gallery.settings.outputDir, album.webName);
                 album.css = "";
                 album.txt = "";
@@ -285,7 +285,7 @@ function loadAlbums() {
                     let fileType = path.extname(file).toLowerCase();
                     // Custom CSS support
                     if (fileType == ".css") {
-                        album.css = file;
+                        album.css = path.basename(file);
                         fs.copyFile(path.join(album.sourcePath, album.css), path.join(album.outputPath, album.css), (err) => {
                             if (err) throw err;
                             console.log("CSS Found for albumName: " + albumName);
@@ -347,7 +347,7 @@ function loadAlbums() {
                     // Log it in the storage index as a hash
                     let sourceHash = crypto
                         .createHash("sha1")
-                        .update(album.name + file, "utf8")
+                        .update(path.basename(album.name) + path.basename(file), "utf8")
                         .digest("base64");
                     gallery.imageHashs.push(sourceHash);
                 });
