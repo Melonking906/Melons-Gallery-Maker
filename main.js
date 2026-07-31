@@ -463,12 +463,30 @@ app.whenReady().then(() => {
 async function getNeocitiesClient(user, pass) {
     
     // Patch for older Node/Electron versions on mac 10.13/win7 - not needed on new systems
+    const { Blob } = require("buffer");
+    if (typeof globalThis.Blob === "undefined") {
+        globalThis.Blob = Blob;
+    }
     if (typeof globalThis.File === "undefined") {
         globalThis.File = class File extends Blob {
             constructor(fileBits, fileName, options = {}) {
                 super(fileBits, options);
                 this.name = fileName;
                 this.lastModified = options.lastModified ?? Date.now();
+            }
+        };
+    }
+    if (typeof globalThis.ReadableStream === "undefined") {
+        const { ReadableStream, WritableStream, TransformStream } = require("stream/web");
+        globalThis.ReadableStream = ReadableStream;
+        globalThis.WritableStream = WritableStream;
+        globalThis.TransformStream = TransformStream;
+    }
+    if (typeof globalThis.DOMException === "undefined") {
+        globalThis.DOMException = class DOMException extends Error {
+            constructor(message = "", name = "Error") {
+                super(message);
+                this.name = name;
             }
         };
     }
