@@ -5,6 +5,7 @@ const path = require("path");
 const util = require("util");
 const { DateTime } = require("luxon");
 const request = require("request");
+const { pathToFileURL } = require("url");
 
 const melonMaker = require("./maker.js");
 
@@ -460,7 +461,23 @@ app.whenReady().then(() => {
 // ++++ Functions ++++
 
 async function getNeocitiesClient(user, pass) {
-    const { NeocitiesAPIClient } = await import("async-neocities");
+    
+    // Patch for older Node/Electron versions on mac 10.13/win7 - not needed on new systems
+    if (typeof globalThis.File === "undefined") {
+        globalThis.File = class File extends Blob {
+            constructor(fileBits, fileName, options = {}) {
+                super(fileBits, options);
+                this.name = fileName;
+                this.lastModified = options.lastModified ?? Date.now();
+            }
+        };
+    }
+    const specifier = app.isPackaged
+        ? pathToFileURL(path.join(process.resourcesPath, "app.asar.unpacked", "node_modules", "async-neocities", "index.js")).href
+        : "async-neocities";
+    // End of patch
+    
+    const { NeocitiesAPIClient } = await import(specifier);
     const { api_key } = await NeocitiesAPIClient.getKey({ siteName: user, ownerPassword: pass });
     return new NeocitiesAPIClient(api_key);
 }

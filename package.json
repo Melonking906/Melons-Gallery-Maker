@@ -33,6 +33,9 @@
     "packageManager": "yarn@3.6.3",
     "build": {
         "appId": "net.melonking.${name}",
+        "asarUnpack": [
+            "node_modules/**"
+        ],
         "extraResources": [
             {
                 "from": "./assets",
