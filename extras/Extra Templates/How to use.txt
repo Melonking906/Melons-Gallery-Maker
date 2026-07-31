@@ -1,0 +1,12 @@
+These are HTML templates you can use with your gallery!
+
+To use a template:
+1. Open Gallery maker click "Open the templates folder?" (Create it if none exists yet)
+2. This will open a folder containing your gallery templates.
+3. Pick one of these themes such as "Pixel Shop".
+4. Copy all the files from the themes "templates" folder, to the templates folder you opened in step 1 (replacing any)
+5. That's it, you can now regenerate your gallery and you should see the new template.
+
+Remember you can modify template files however you like!
+
+~MK

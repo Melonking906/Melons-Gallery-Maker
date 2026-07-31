@@ -72,22 +72,27 @@
                 <span class="inputRow"><textarea id="log" readonly></textarea></span>
             </div>
             <div id="right">
-                <span class="melonLink" data-melon-link-format="400x40"></span>
+                <div id="melonLinkWrapper"><span class="melonLink" data-melon-link-format="400x40"></span></div>
                 <h3>Users Guide:</h3>
-                <p>To your left you will notice the SOURCE picker! Your source folder can be any folder that contains one or more sub-folders of images. Each sub-folder will be converted into a photo album in your gallery!</p>
+                <p>
+                    To get started, pick a "Source Folder", this is where your original gallery images live. Each sub-folder in your Source will become a separate photo album (see the example below, "My Gallery" is the Source Folder)
+                </p>
                 <img src="images/sample.png" alt="Folder Example" />
-                <p>When you pick a source, this program will create some template files 4u! You can modify the templates to change how your gallery will look!</p>
+                <p>
+                    When you first pick a Source, the program will create a new folder called "MelonGallery" in your source. This folder is where settings and templates are stored. You can modify the files in the templates folder to change how your gallery will look! (This folder wont appear as an album in your gallery)
+                </p>
+                <p>Your "Output Folder" is where your new HTML gallery will be exported to! Every time you click the MAKE button; your gallery will be regenerated in the output folder!</p>
                 Source Tips and Notes:
                 <ul>
-                    <li>Your source images will never be modified!</li>
+                    <li>Source images will never be modified and can be full size originals!</li>
                     <li>Albums are named after their source folders!</li>
-                    <li>You can included a .css file in an albums source folder to give the album a unique style!</li>
-                    <li>You can include a .txt file in an albums source folder to give the album a unique description!</li>
-                    <li>You can include a .mp3 file in an albums source folder to give the album unique music!</li>
-                    <li>If you mess up a template, just delete it and the program will offer to remake it!</li>
+                    <li>You can included a .css file in an albums folder to give the album a unique style!</li>
+                    <li>You can include a .txt file in an albums folder to give the album a unique description!</li>
+                    <li>You can also give per-image descriptions, check the wiki for info!</li>
+                    <li>You can include an .mp3 file in an albums folder to give the album unique music!</li>
+                    <li>If you mess up a template, just delete it. The program will offer to remake it after a restart!</li>
                     <li>Choose Help/Visit Wiki to see detailed setup instructions!</li>
                 </ul>
-                <p>Your OUTPUT folder is where your new HTML gallery will be exported to! Every time you click the MAKE button; your gallery will be regenerated!</p>
                 Output Tips and Notes:
                 <ul>
                     <li>You can re-make as often as you like with new templates, images, albums and settings!</li>

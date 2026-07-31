@@ -116,8 +116,9 @@ label {
     image-rendering: unset;
 }
 
-#right .melonLink {
+#melonLinkWrapper {
     display: block;
+    margin: auto;
     text-align: center;
     margin-bottom: 10px;
 }
